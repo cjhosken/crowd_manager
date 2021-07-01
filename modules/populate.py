@@ -1,5 +1,6 @@
 from modules.agent import Agent
 from bpy.types import Operator
+import bpy
 
 class CrowdManager_OT_Populate(Operator):
     bl_label = "Populate Agents"
@@ -8,8 +9,49 @@ class CrowdManager_OT_Populate(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        col = Agent.getAgentCollection()
-        if len(col.children) == 0:
-            return {'CANCELLED'}
-        else:
-            return {'FINISHED'}
+        crowd_collection = getCrowdCollection()
+
+        if len(crowd_collection.objects) > 0:
+            for a in crowd_collection.objects:
+                bpy.data.objects.remove(a, do_unlink=True)
+
+
+        control_collection = Agent.getAgentCollection()
+        agent_collection = context.scene.crowdmanager_props.agent_collection
+
+        if len(control_collection.objects) > 0:
+            idx = 0
+            l = 0
+            for empty in control_collection.objects:
+                base = agent_collection.objects[idx]
+                lk = bpy.data.objects.new(empty.name + "_" + base.name, base.data)
+                addInstanceToCollection(lk, crowd_collection)
+                lk.location = empty.location
+                lk.rotation_euler = empty.rotation_euler
+                lk.scale = empty.scale
+                lk.parent = empty
+
+                if idx >= len(agent_collection.objects):
+                    idx = 0
+                    l += 1
+
+        return {'FINISHED'}
+
+def addInstanceToCollection(instance, col):
+    if len(col.objects) > 0:
+        for a in col.objects:
+            if a.name == instance.name:
+                bpy.data.objects.remove(a, do_unlink=True)
+                break
+
+    col.objects.link(instance)
+
+        
+def getCrowdCollection():
+    collection = bpy.data.collections.get("GRP_CrowdCollection")
+
+    if collection is None:
+        collection = bpy.data.collections.new("GRP_CrowdCollection")
+        bpy.context.scene.collection.children.link(collection)
+            
+    return collection
