@@ -4,7 +4,7 @@ from bpy.types import Operator
 class CrowdManager_OT_Simulate(Operator):
     bl_label = "Simulate Crowds"
     bl_idname = "crowdmanager.simulate"
-    bl_description = "Deletes all collision modifiers from selected objects."
+    bl_description = "Simulates crowd agents."
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):

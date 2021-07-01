@@ -33,6 +33,7 @@ class Agent():
             for a in col.objects:
                 if a.name == f"AGENT_{agent._id}":
                     bpy.data.objects.remove(a, do_unlink=True)
+                    break
 
         e = bpy.data.objects.new("empty", None)
         col.objects.link(e)

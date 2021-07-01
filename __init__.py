@@ -28,6 +28,8 @@ import bpy
 import sys
 import os
 from importlib import reload
+
+from bpy.props import IntProperty
 parent_path = None
 
 try:
@@ -44,45 +46,62 @@ if (parent_path is None):
 
 sys.path.append(parent_path)
 
-module_list = ["simulate", "agent"]
+module_list = ["simulate", "agent", "addon_props", "panel", "populate", "distribute", "behaviors", "targets"]
 
 for module_name in module_list:
     if (module_name in sys.modules):
         reload(sys.modules[module_name])
 
 import modules.simulate as simulate
+import modules.populate as populate
+import modules.behaviors as behaviors
+import modules.distribute as distribute
+import modules.targets as targets
 import modules.agent as agent
 import panel
-import props
+import addon_props
 
 classes = [
-    props.CrowdManager_Properties,
+    addon_props.CrowdManager_Properties,
+    targets.CROWDMANAGER_TargetCollection,
+    targets.CrowdManager_OT_DeleteTarget,
+    targets.CrowdManager_OT_AddTarget,
+    behaviors.CROWDMANAGER_UL_BehaviorItems,
+    behaviors.CrowdManager_OT_BehaviorActions,
+    behaviors.CrowdManager_OT_AddBehavior,
+    behaviors.CROWDMANAGER_BehaviorCollection,
+    distribute.CrowdManager_OT_Distribute,
     simulate.CrowdManager_OT_Simulate,
-    panel.CrowdManager_PT_Panel,
+    populate.CrowdManager_OT_Populate,
     panel.CrowdManager_PT_BasePanel,
-    panel.CrowdManager_PT_GeneralPanel,
     panel.CrowdManager_PT_AgentPanel,
-    panel.CrowdManager_PT_CollisionsPanel,
+    panel.CrowdManager_PT_GeneralPanel,
+    panel.CrowdManager_PT_BehaviorPanel,
+    panel.CrowdManager_PT_ExtraPanel,
 ]
 
 ag = agent.Agent(1)
 
-def register():
+def register():    
     for cls in classes:
         bpy.utils.register_class(cls)
     
-    bpy.types.WindowManager.crowdmanager_props = bpy.props.PointerProperty(type=props.CrowdManager_Properties)
+    bpy.types.Scene.crowdmanager_props = bpy.props.PointerProperty(type=addon_props.CrowdManager_Properties)
+    bpy.types.Scene.crowdmanager_behaviors = bpy.props.CollectionProperty(type=behaviors.CROWDMANAGER_BehaviorCollection)
+    bpy.types.Scene.crowdmanager_targets = bpy.props.CollectionProperty(type=targets.CROWDMANAGER_TargetCollection)
+    bpy.types.Scene.crowdmanager_index = IntProperty()
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
 
-    del bpy.types.WindowManager.crowdmanager_props
+    del bpy.types.Scene.crowdmanager_props
+    del bpy.types.Scene.crowdmanager_behaviors
+    del bpy.types.Scene.crowdmanager_index
+    del bpy.types.Scene.crowdmanager_targets
 
 if __name__ == "__main__":
     try:
         register()
-    except ValueError as e:
+    except Exception as e:
         print(e)
-        unregister()
-        register()
