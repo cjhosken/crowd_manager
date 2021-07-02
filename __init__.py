@@ -12,12 +12,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__copyright__ = "(c) 2021,  Christopher Hosken"
+__copyright__ = "(c) 2021, Christopher Hosken"
 __license__ = "GPL v3"
 
 bl_info = {
     "name": "crowdManager",
-    "author": "Christopher Hosken",
+    "author": "Christopher Hosken, Gurpeet Singh",
     "version": (1, 0, 0),
     "blender": (2, 92, 0),
     "warning": "",
@@ -72,15 +72,15 @@ classes = [
     behaviors.CROWDMANAGER_BehaviorCollection,
     distribute.CrowdManager_OT_Distribute,
     simulate.CrowdManager_OT_Simulate,
+    simulate.CrowdManager_OT_ClearSimulations,
     populate.CrowdManager_OT_Populate,
+    populate.CrowdManager_OT_DePopulate,
     panel.CrowdManager_PT_BasePanel,
     panel.CrowdManager_PT_AgentPanel,
     panel.CrowdManager_PT_GeneralPanel,
     panel.CrowdManager_PT_BehaviorPanel,
     panel.CrowdManager_PT_ExtraPanel,
 ]
-
-ag = agent.Agent(1)
 
 def register():    
     for cls in classes:
@@ -90,6 +90,7 @@ def register():
     bpy.types.Scene.crowdmanager_behaviors = bpy.props.CollectionProperty(type=behaviors.CROWDMANAGER_BehaviorCollection)
     bpy.types.Scene.crowdmanager_targets = bpy.props.CollectionProperty(type=targets.CROWDMANAGER_TargetCollection)
     bpy.types.Scene.crowdmanager_index = IntProperty()
+    agent.Agent.ReloadAgents()
 
 def unregister():
     for cls in classes:
