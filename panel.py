@@ -32,8 +32,14 @@ class CrowdManager_PT_AgentPanel(CrowdManager_PT_Panel, Panel):
         col.prop(props, "agent_collection")
 
         col.operator("crowdmanager.distribute", text="Scatter Agents", icon="OUTLINER_OB_POINTCLOUD")
-        col.operator("crowdmanager.simulate", text="Simulate Agents", icon="OUTLINER_OB_ARMATURE")
-        col.operator("crowdmanager.populate", text="Populate Agents", icon="COMMUNITY")
+
+        row = col.row()
+        row.operator("crowdmanager.simulate", text="Simulate Agents", icon="OUTLINER_OB_ARMATURE")
+        row.operator("crowdmanager.desimulate", text="", icon='X')
+        
+        row = col.row()
+        row.operator("crowdmanager.populate", text="Populate Agents", icon="COMMUNITY")
+        row.operator("crowdmanager.depopulate", text="", icon='X')
 
 class CrowdManager_PT_GeneralPanel(CrowdManager_PT_Panel, Panel):
     bl_label = "General"
@@ -124,3 +130,4 @@ class CrowdManager_PT_ExtraPanel(CrowdManager_PT_Panel, Panel):
         col = layout.column()
         col.label(text="Contact:")
         col.operator("wm.url_open", text="Christopher Hosken").url = "https://github.com/Christopher-Hosken"
+        col.operator("wm.url_open", text="Gurpeet Singh").url = "https://github.com/gurpreetsingh-exe"
