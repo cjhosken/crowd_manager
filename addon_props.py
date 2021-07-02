@@ -2,10 +2,12 @@ from bpy.types import Collection, PropertyGroup, UIList
 from bpy.props import BoolProperty, CollectionProperty, EnumProperty, IntProperty, FloatProperty, PointerProperty, StringProperty
 import __init__
 import bpy
+import modules.agent as agent
 
 parent_path = __init__.parent_path
-
 class CrowdManager_Properties(PropertyGroup):
+    agents = []
+
     agent_count : IntProperty(
         name="Agent count",
         description="Number of agents used for simulating",
@@ -84,4 +86,10 @@ class CrowdManager_Properties(PropertyGroup):
         type= bpy.types.Object,
         name="Surface",
         description="Object used to scatter agents",
+    )
+
+    use_vertex_group : BoolProperty(
+        name="Use Vertex Group",
+        description= "Use surface object vertex group, 'crowd'",
+        default = False,
     )
