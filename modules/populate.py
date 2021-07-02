@@ -37,6 +37,24 @@ class CrowdManager_OT_Populate(Operator):
 
         return {'FINISHED'}
 
+
+class CrowdManager_OT_DePopulate(Operator):
+    bl_label = "Populate Agents"
+    bl_idname = "crowdmanager.depopulate"
+    bl_description = "DePopulates all populated Agents"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        crowd_collection = getCrowdCollection()
+
+
+        if len(crowd_collection.objects) > 0:
+            for a in crowd_collection.objects:
+                bpy.data.objects.remove(a, do_unlink=True)
+
+        return {'FINISHED'}
+
+
 def addInstanceToCollection(instance, col):
     if len(col.objects) > 0:
         for a in col.objects:
