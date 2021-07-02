@@ -3,12 +3,14 @@ import bpy
 # AGENT_id
 
 class Agent():
-    def __init__(self, id):
+    def __init__(self, id, bl, br):
         self._id = id
-        self._baseLocation = [0, 0, 0]
-        self._baseRotation = [0, 0, 0]
-        self._location = [0, 0, 0]
-        self._rotation = [0, 0, 0]
+        self._baseLocation = bl
+        self._baseRotation = br
+        self._location = self._baseLocation
+        self._rotation = self._baseRotation
+
+    def build(self):
         col = Agent.getAgentCollection()
         Agent.addAgentToCollection(self, col)
 
@@ -41,6 +43,10 @@ class Agent():
         e.name = f"AGENT_{agent._id}"
         e.empty_display_size = 1
         e.empty_display_type = 'SPHERE'
+        agent._baseLocation = e.location
+        agent._baseRotation = e.rotation_euler
+        agent._location = agent._baseLocation
+        agent._rotation = agent._baseRotation
         
     def getAgentCollection():
         collection = bpy.data.collections.get("GRP_AgentCollection")
@@ -50,3 +56,13 @@ class Agent():
             bpy.context.scene.collection.children.link(collection)
             
         return collection
+
+    def ReloadAgents():
+        bpy.context.scene.crowdmanager_props.agents
+        agent_collection = bpy.context.scene.crowdmanager_props.agent_collection
+
+        if len(bpy.context.scene.crowdmanager_props.agents) != len(agent_collection.objects):
+            bpy.context.scene.crowdmanager_props.agents = []
+            for i, agent in enumerate(agent_collection.objects):
+                ag = Agent(i, agent.location, agent.rotation_euler)
+                bpy.context.scene.crowdmanager_props.agents.append(ag)
