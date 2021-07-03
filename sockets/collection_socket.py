@@ -1,7 +1,3 @@
-# ap_node_socket_integer.
-# Atom's socket definition.
-# (c) 2013 
-
 import bpy
 import threading, time
 from bpy.props import IntProperty, FloatProperty, StringProperty, FloatVectorProperty, CollectionProperty, EnumProperty
