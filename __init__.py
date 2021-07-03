@@ -1,104 +1,64 @@
-  
-#    This software free software: you can redistribute it and/or modify
+#
+#    Copyright (C) 2021 Christopher Hosken
+#    hoskenchristopher@gmail.com
+#
+#    Created by Christopher Hosken
+#
+#    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    This software is distributed in the hope that it will be useful,
+#    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-__copyright__ = "(c) 2021,  Christopher Hosken"
-__license__ = "GPL v3"
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 bl_info = {
-    "name": "crowdManager",
-    "author": "Christopher Hosken",
-    "version": (1, 0, 0),
-    "blender": (2, 92, 0),
-    "warning": "",
-    "category": "Animation"
+    "name" : "Crowd Manager",
+    "author" : "Christopher Hosken, Gurpeet Singh",
+    "description" : "Node based visual scripting designed for creating large crowds in Blender.",
+    "blender" : (3, 0, 0),
+    "version" : (3, 0, 0),
+    "location" : "CrowdManager Editor",
+    "warning" : "This version is still in development.",
+    "category" : "Node"
 }
 
-import bpy
-import sys
-import os
-from importlib import reload
+from . import auto_load
+from .nodes import node_classes
+from .sockets import socket_classes
+from .operators import operator_classes
+from .preferences import classes as preference_classes
+import nodeitems_utils
 
-from bpy.props import IntProperty
-parent_path = None
+classes = []
+classes += preference_classes
+classes += operator_classes
+classes += node_classes
+classes += socket_classes
 
-try:
-    parent_path = os.path.dirname(__file__)
-except:
-    pass
-try:
-    parent_path = os.path.dirname(bpy.context.space_data.text.filepath)
-except:
-    pass
+auto_load.init()
 
-if (parent_path is None):
-    raise FileNotFoundError("Cannot locate path 'parent_path'.")
+def register():
+    from bpy.utils import register_class
+    from .nodes.node_tree import nodeCategories
 
-sys.path.append(parent_path)
-
-module_list = ["simulate", "agent", "addon_props", "panel", "populate", "distribute", "behaviors", "targets"]
-
-for module_name in module_list:
-    if (module_name in sys.modules):
-        reload(sys.modules[module_name])
-
-import modules.simulate as simulate
-import modules.populate as populate
-import modules.behaviors as behaviors
-import modules.distribute as distribute
-import modules.targets as targets
-import modules.agent as agent
-import panel
-import addon_props
-
-classes = [
-    addon_props.CrowdManager_Properties,
-    targets.CROWDMANAGER_TargetCollection,
-    targets.CrowdManager_OT_DeleteTarget,
-    targets.CrowdManager_OT_AddTarget,
-    behaviors.CROWDMANAGER_UL_BehaviorItems,
-    behaviors.CrowdManager_OT_BehaviorActions,
-    behaviors.CrowdManager_OT_AddBehavior,
-    behaviors.CROWDMANAGER_BehaviorCollection,
-    distribute.CrowdManager_OT_Distribute,
-    simulate.CrowdManager_OT_Simulate,
-    populate.CrowdManager_OT_Populate,
-    panel.CrowdManager_PT_BasePanel,
-    panel.CrowdManager_PT_AgentPanel,
-    panel.CrowdManager_PT_GeneralPanel,
-    panel.CrowdManager_PT_BehaviorPanel,
-    panel.CrowdManager_PT_ExtraPanel,
-]
-
-ag = agent.Agent(1)
-
-def register():    
     for cls in classes:
-        bpy.utils.register_class(cls)
-    
-    bpy.types.Scene.crowdmanager_props = bpy.props.PointerProperty(type=addon_props.CrowdManager_Properties)
-    bpy.types.Scene.crowdmanager_behaviors = bpy.props.CollectionProperty(type=behaviors.CROWDMANAGER_BehaviorCollection)
-    bpy.types.Scene.crowdmanager_targets = bpy.props.CollectionProperty(type=targets.CROWDMANAGER_TargetCollection)
-    bpy.types.Scene.crowdmanager_index = IntProperty()
+        register_class(cls)
+
+    nodeitems_utils.register_node_categories('CROWDMANAGER_NODES', nodeCategories)
 
 def unregister():
-    for cls in classes:
-        bpy.utils.unregister_class(cls)
+    from bpy.utils import unregister_class
+    nodeitems_utils.unregister_node_categories('CROWDMANAGER_NODES')
 
-    del bpy.types.Scene.crowdmanager_props
-    del bpy.types.Scene.crowdmanager_behaviors
-    del bpy.types.Scene.crowdmanager_index
-    del bpy.types.Scene.crowdmanager_targets
+    for cls in reversed(classes):
+        unregister_class(cls)
 
 if __name__ == "__main__":
     try:
