@@ -1,8 +1,7 @@
 import bpy
 from bpy.props import *
-from bpy.types import AddonPreferences
 
-class CrowdManager_Preferences(AddonPreferences):
+class CrowdManager_Preferences(bpy.types.AddonPreferences):
     bl_idname = __package__
 
     use_node_colors : BoolProperty(

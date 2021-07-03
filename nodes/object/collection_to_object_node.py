@@ -1,14 +1,14 @@
-from bpy.types import Node, Object, Collection
-from bpy.props import PointerProperty
+import bpy
+from bpy.props import *
 from ..base_node import CrowdManagerBaseNode
 
-class CrowdManager_CollectionToObjectNode(Node, CrowdManagerBaseNode):
+class CrowdManager_CollectionToObjectNode(bpy.types.Node, CrowdManagerBaseNode):
     bl_idname = "CrowdManager_CollectionToObjectNode"
     bl_label = "Collection To Object"
 
     node_type = "object"
 
-    collection_object: PointerProperty(type=Object, name="Object")
+    collection_object: PointerProperty(type=bpy.types.Object, name="Object")
 
     def init(self, context):
         super().__init__()

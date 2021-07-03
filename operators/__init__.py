@@ -1,8 +1,7 @@
 import bpy
-from bpy.props import BoolProperty, StringProperty
-from bpy.types import Operator
+from bpy.props import *
 
-class CrowdManager_OT_CreateCollection(Operator):
+class CrowdManager_OT_CreateCollection(bpy.types.Operator):
     bl_label = "Create Collection"
     bl_idname = "crowdmanager.create_collection"
     bl_description = "Creates a collection"

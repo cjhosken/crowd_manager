@@ -1,9 +1,8 @@
 import bpy
 from bpy.props import *
-from bpy.types import Node
 from ..base_node import CrowdManagerBaseNode
 
-class CrowdManager_ObjectInputNode(Node, CrowdManagerBaseNode):
+class CrowdManager_ObjectInputNode(bpy.types.Node, CrowdManagerBaseNode):
     '''Object Input Node'''
     bl_idname = 'CrowdManager_ObjectInputNode'
     bl_label = 'Object'

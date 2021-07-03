@@ -1,4 +1,3 @@
-from bpy.types import NodeLinks
 from ..preferences import getUserPreferences, desaturate
 
 class CrowdManagerBaseNode:
