@@ -1,6 +1,4 @@
-from .. import point
 import bpy
-from bpy.props import BoolProperty, CollectionProperty, PointerProperty
 from ..preferences import getUserPreferences
 from .utils import updateParameter
 
@@ -9,9 +7,7 @@ class CrowdManager_PointSocket(bpy.types.NodeSocket):
 	bl_idname = 'CrowdManager_PointSocketType'
 	bl_label = 'Point Socket'
 
-	#points : CollectionProperty(type=CrowdManager_Point, update=updateParameter)
-
-	# points need location and rotation vectors (make your own property)
+	points : bpy.props.StringProperty(name="Points", default="[]", update=updateParameter)
 
 	def draw(self, context, layout, node, text):
 		layout.label(text=text)

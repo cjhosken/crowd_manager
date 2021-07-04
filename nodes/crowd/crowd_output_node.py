@@ -20,5 +20,5 @@ class CrowdManager_CrowdOutputNode(bpy.types.Node, CrowdManagerBaseNode):
         row.prop(self, "crowd_collection", text="")
         row.operator("crowdmanager.create_collection", text="", icon='PLUS').collection_name = "CROWD_Crowd"
     
-    def update(self):
+    def edit(self):
         pass

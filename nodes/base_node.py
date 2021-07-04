@@ -17,8 +17,11 @@ class CrowdManagerBaseNode:
         pass
 
     def update(self):
-        if len(self.outputs) > 0:
-            self.link_update()
+        '''Dont use this, use edit() instead.'''
+        '''Only use update for input nodes'''
+    
+    def edit(self):
+        self.link_update()
 
     # Don't override these functions
     ######################################
@@ -35,21 +38,31 @@ class CrowdManagerBaseNode:
     def draw_label(self):
         return self.name
     
-    def property_changed(self, context):
+    def property_changed(self, context=None):
         self.id_data.update()
+        self.refresh()
+    
+    def refresh(self):
+        self.edit()
         self.update()
 
-    def update_socket(self, context):
-        self.link_update()
+
+    def socket_value_update(self, context):
+        self.refresh()
     
     def link_update(self):
-        if len(self.outputs) > 0: 
-            for o in self.outputs:
+        for o in self.outputs:
+            if o.is_linked:
                 if len(o.links) > 0:
                     for l in o.links:
-                        l.to_node.update
+                        if l.is_valid:
+                            l.to_node.refresh()
     
+    def remove_link(self, link):
+        self.refresh()
+
     def insert_link(self, link):
+        self.refresh()
         if type(link.to_socket) != type(link.from_socket):
             link.is_valid = False
     

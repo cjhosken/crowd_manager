@@ -15,5 +15,5 @@ class CrowdManager_WanderBehaviorNode(bpy.types.Node, CrowdManagerBaseNode):
     def draw_buttons(self, context, layout):
         pass
     
-    def update(self):
+    def edit(self):
         pass

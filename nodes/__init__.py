@@ -11,10 +11,10 @@ from .crowd.crowd_output_node import CrowdManager_CrowdOutputNode
 
 from .behavior.wander_behavior_node import CrowdManager_WanderBehaviorNode
 
-from .point.object_point_scatter_node import CrowdManager_ObjectPointScatterNode
+from .point.point_scatter_node import CrowdManager_PointScatterNode
 from .point.point_node import CrowdManager_PointNode
-from .point.point_viewer import CrowdManager_PointViewer
-from .point.point_join import CrowdManager_PointJoin
+from .point.point_viewer_node import CrowdManager_PointViewerNode
+from .point.point_join_node import CrowdManager_PointJoinNode
 
 node_classes = node_tree_classes + [
         CrowdManager_ObjectInputNode,
@@ -29,8 +29,8 @@ node_classes = node_tree_classes + [
 
         CrowdManager_WanderBehaviorNode,
 
-        CrowdManager_ObjectPointScatterNode,
+        CrowdManager_PointScatterNode,
         CrowdManager_PointNode,
-        CrowdManager_PointViewer,
-        CrowdManager_PointJoin,
+        CrowdManager_PointViewerNode,
+        CrowdManager_PointJoinNode,
     ]

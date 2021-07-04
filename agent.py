@@ -1,10 +1,11 @@
 import bpy
-
 class Agent():
     def __init__(self, code, pnt, id):
         self._id = id
-        self._bLoc, self._loc = pnt.location
-        self._bRot, self._rot = pnt.rotation
+        self._bLoc = pnt[0]
+        self._loc = pnt[0]
+        self._bRot = pnt[1]
+        self._rot = pnt[0]
         self.vis()
 
     def vis(self):
@@ -27,10 +28,13 @@ class Agent():
         e.name = f"AGENT_{agent._id}"
         e.empty_display_size = 1
         e.empty_display_type = 'SPHERE'
-        agent._baseLocation = e.location
-        agent._baseRotation = e.rotation_euler
-        agent._location = agent._baseLocation
-        agent._rotation = agent._baseRotation
+        e.location = agent._bLoc
+        e.rotation_euler = agent._bRot
+
+    def clearAgentCollection(col):
+        if len(col.objects) > 0:
+            for a in col.objects:
+                bpy.data.objects.remove(a, do_unlink=True)
     
     def getAgentCollection():
         collection = bpy.data.collections.get("GRP_AgentCollection")

@@ -35,9 +35,9 @@ nodeCategories = [
     ]),
     CrowdNodeCategory("POINT", "Point", items=[
         NodeItem("CrowdManager_PointNode"),
-        NodeItem("CrowdManager_ObjectPointScatterNode"),
-        NodeItem("CrowdManager_PointJoin"),
-        NodeItem("CrowdManager_PointViewer"),
+        NodeItem("CrowdManager_PointScatterNode"),
+        NodeItem("CrowdManager_PointJoinNode"),
+        NodeItem("CrowdManager_PointViewerNode"),
     ]),
 ]
 

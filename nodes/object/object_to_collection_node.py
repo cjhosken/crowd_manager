@@ -9,7 +9,7 @@ class CrowdManager_ObjectToCollectionNode(bpy.types.Node, CrowdManagerBaseNode):
 
     node_type = "collection"
 
-    referenced_collection: PointerProperty(type=bpy.types.Collection, name="Object")
+    referenced_collection: PointerProperty(type=bpy.types.Collection, name="Object", update = CrowdManagerBaseNode.property_changed)
 
     def init(self, context):
         super().__init__()
@@ -32,7 +32,7 @@ class CrowdManager_ObjectToCollectionNode(bpy.types.Node, CrowdManagerBaseNode):
     def execute(self, crowd, input_node):
         pass
 
-    def update(self):
+    def edit(self):
         node0 = self.get_linked_node(0)
         node1 = self.get_linked_node(1)
 
@@ -58,4 +58,5 @@ class CrowdManager_ObjectToCollectionNode(bpy.types.Node, CrowdManagerBaseNode):
 
         if len(self.outputs) > 0:
             self.outputs[0].collection = output_collection
+        
         self.link_update()
