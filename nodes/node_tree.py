@@ -23,15 +23,21 @@ nodeCategories = [
         NodeItem("CrowdManager_CollectionToObjectNode"),
         NodeItem("CrowdManager_ObjectToCollectionNode")
     ]),
+    CrowdNodeCategory("AGENT", "Agent", items=[
+        NodeItem("CrowdManager_AgentNode")
+    ]),
     CrowdNodeCategory("CROWD", "Crowd", items=[
-        NodeItem("CrowdManager_CrowdNode"),
+        NodeItem("CrowdManager_PopulateAgentsNode"),
         NodeItem("CrowdManager_CrowdOutputNode"),
     ]),
     CrowdNodeCategory("BEHAVE", "Behavior", items=[
         NodeItem("CrowdManager_WanderBehaviorNode")
     ]),
     CrowdNodeCategory("POINT", "Point", items=[
-        NodeItem("CrowdManager_ObjectPointScatterNode")
+        NodeItem("CrowdManager_PointNode"),
+        NodeItem("CrowdManager_ObjectPointScatterNode"),
+        NodeItem("CrowdManager_PointJoin"),
+        NodeItem("CrowdManager_PointViewer"),
     ]),
 ]
 

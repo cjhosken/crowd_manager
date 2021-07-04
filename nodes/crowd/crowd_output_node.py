@@ -8,13 +8,17 @@ class CrowdManager_CrowdOutputNode(bpy.types.Node, CrowdManagerBaseNode):
     bl_label = 'Output'
 
     node_type = "crowd"
+
+    crowd_collection : bpy.props.PointerProperty(type=bpy.types.Collection)
     
     def init(self, context):
         super().__init__()
         self.inputs.new('CrowdManager_CrowdSocketType', "Crowd")
 
     def draw_buttons(self, context, layout):
-        layout.operator("crowdmanager.simulate", text='Simulate', icon='BOIDS')
+        row = layout.row()
+        row.prop(self, "crowd_collection", text="")
+        row.operator("crowdmanager.create_collection", text="", icon='PLUS').collection_name = "CROWD_Crowd"
     
     def update(self):
         pass

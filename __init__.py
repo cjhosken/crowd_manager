@@ -19,7 +19,7 @@
 #
 
 bl_info = {
-    "name" : "Crowd Manager",
+    "name" : "CrowdManager",
     "author" : "Christopher Hosken, Gurpeet Singh",
     "description" : "Node based visual scripting designed for creating large crowds in Blender.",
     "blender" : (3, 0, 0),

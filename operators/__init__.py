@@ -27,7 +27,10 @@ class CrowdManager_OT_Simulate(bpy.types.Operator):
     bl_description = "Simulates crowd agents."
     bl_options = {"REGISTER", "UNDO"}
 
+    sim_node : bpy.types.Node
+
     def execute(self, context):
+        print("ran")
         return {'FINISHED'}
 
 operator_classes = [CrowdManager_OT_CreateCollection, CrowdManager_OT_Simulate]

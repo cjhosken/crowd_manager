@@ -3,6 +3,7 @@ from .collection_socket import CrowdManager_CollectionSocket
 from .crowd_socket import CrowdManager_CrowdSocket
 from .behavior_socket import CrowdManager_BehaviorSocket
 from .point_socket import CrowdManager_PointSocket
+from .agent_socket import CrowdManager_AgentSocket
 
 socket_classes = [
     CrowdManager_ObjectSocket,
@@ -10,4 +11,5 @@ socket_classes = [
     CrowdManager_CrowdSocket,
     CrowdManager_PointSocket,
     CrowdManager_BehaviorSocket,
+    CrowdManager_AgentSocket
     ]

@@ -63,14 +63,14 @@ class CrowdManagerBaseNode:
     
     def get_linked_nodes(self, socket_id=0):
         nodes = []
-        link = self.inputs[socket_id]
-        if link.is_linked and len(link.links) > 0:
-            for l in link.links:
-                if l.is_valid:
-                    nodes.append(l.from_node)
-            if len(nodes) > 0:
-                return nodes
-            return None
+        if socket_id < len(self.inputs):
+            link = self.inputs[socket_id]
+            if link.is_linked and len(link.links) > 0:
+                for l in link.links:
+                    if l.is_valid:
+                        nodes.append(l.from_node)
+                if len(nodes) > 0:
+                    return nodes
         return None
 
     # Extra Utilities
