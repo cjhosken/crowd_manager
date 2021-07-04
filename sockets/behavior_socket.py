@@ -7,7 +7,7 @@ class CrowdManager_BehaviorSocket(bpy.types.NodeSocket):
 	bl_idname = 'CrowdManager_BehaviorSocketType'
 	bl_label = 'Behavior Socket'
 
-	object : bpy.props.PointerProperty(name="Object", type=bpy.types.Object, update=updateParameter)
+	code : bpy.props.StringProperty(default="pass")
 
 	def draw(self, context, layout, node, text):
 		layout.label(text=text)

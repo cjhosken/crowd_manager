@@ -7,6 +7,13 @@ class CrowdManager_WanderBehaviorNode(bpy.types.Node, CrowdManagerBaseNode):
     bl_label = 'Wander Behavior'
 
     node_type = "behavior"
+    
+    code = """\n
+        import random
+        self._loc[0] += random.random()
+        self._loc[1] += random.random()
+        """
+
 
     def init(self, context):
         super().__init__()
@@ -16,4 +23,4 @@ class CrowdManager_WanderBehaviorNode(bpy.types.Node, CrowdManagerBaseNode):
         pass
     
     def edit(self):
-        pass
+        self.outputs[0].code = self.code

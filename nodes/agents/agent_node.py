@@ -1,4 +1,5 @@
 import bpy
+import json
 from bpy.props import *
 from ..base_node import CrowdManagerBaseNode
 from ...agent import Agent
@@ -10,6 +11,9 @@ class CrowdManager_AgentNode(bpy.types.Node, CrowdManagerBaseNode):
 
     node_type = "agent"
 
+    agents = []
+    code = ""
+
     def init(self, context):
         super().__init__()
         self.inputs.new('CrowdManager_BehaviorSocketType', "Behavior")
@@ -18,41 +22,32 @@ class CrowdManager_AgentNode(bpy.types.Node, CrowdManagerBaseNode):
         self.outputs.new('CrowdManager_AgentSocketType', "Agents")
 
     def draw_buttons(self, context, layout):
-        layout.operator("crowdmanager.simulate", text='Simulate', icon='BOIDS')
+        layout.operator("crowdmanager.simulate", text='Simulate', icon='BOIDS').json_agents = self.outputs[0].agents
     
     def edit(self):
         node_bh = self.get_linked_node(0)
         node_pn = self.get_linked_node(1)
         
-        agents = []
-        code = ""
+        self.agents = []
         if node_pn is not None and len(string_to_point_list(node_pn.outputs[0].points)) > 0:
             Agent.clearAgentCollection(Agent.getAgentCollection())
             pnts = string_to_point_list(node_pn.outputs[0].points)
 
-            if node_bh is not None and node_bh.outputs[0].code is not None:
-                code = node_bh.outputs[0].code
+            if node_bh is not None:
+                self.code = node_bh.outputs[0].code
 
             for i, p in enumerate(pnts):
-                ag = Agent(code, p, i)
-                agents.append(ag)
+                ag = Agent(self.code, p, i)
+                self.agents.append(ag)
 
         elif node_pn is not None and len(string_to_point_list(node_pn.outputs[0].points)) <= 0:
             Agent.clearAgentCollection(Agent.getAgentCollection())
+            self.agents = None
 
-        
-        self.outputs[0].agents = str(agents)
+        agent_dict = {
+            "agents" : self.agents
+        }
+
+        self.outputs[0].agents = json.dumps(agent_dict)
 
         self.link_update()
-        
-        
-        
-
-
-        
-
-
-            
-
-
-        

@@ -10,10 +10,25 @@ class Agent():
 
     def vis(self):
         col = Agent.getAgentCollection()
-        Agent.addAgentToCollection(self, col)
+        self.ob = Agent.addAgentToCollection(self, col)
 
     def update(self):
-        pass
+        self.exec_code()
+        self.ob.location = self._loc
+        self.ob.keyframe_insert(data_path="location", frame=bpy.context.scene.frame_current)
+
+    def exec_code(self):
+        exec(self.code)
+
+
+
+
+
+
+
+
+
+
 
     def addAgentToCollection(agent, col):
         if len(col.objects) > 0:
@@ -30,6 +45,7 @@ class Agent():
         e.empty_display_type = 'SPHERE'
         e.location = agent._bLoc
         e.rotation_euler = agent._bRot
+        return e
 
     def clearAgentCollection(col):
         if len(col.objects) > 0:
