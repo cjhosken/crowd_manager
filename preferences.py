@@ -34,14 +34,14 @@ class CrowdManager_Preferences(bpy.types.AddonPreferences):
     point_node_color : FloatVectorProperty(
         name="Point Nodes Color",
         subtype="COLOR",
-        default=(.7, .7, .7),
+        default=(.6, .7, .9),
         min=0, max=1
     )
 
     behavior_node_color : FloatVectorProperty(
         name="Behavior Nodes Color",
         subtype="COLOR",
-        default=(.4, .8, .2),
+        default=(.3, .7, .3),
         min=0, max=1
     )
 

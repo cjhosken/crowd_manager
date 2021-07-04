@@ -22,7 +22,17 @@ nodeCategories = [
         NodeItem("CrowdManager_CollectionInputNode"),
         NodeItem("CrowdManager_CollectionToObjectNode"),
         NodeItem("CrowdManager_ObjectToCollectionNode")
-    ])
+    ]),
+    CrowdNodeCategory("CROWD", "Crowd", items=[
+        NodeItem("CrowdManager_CrowdNode"),
+        NodeItem("CrowdManager_CrowdOutputNode"),
+    ]),
+    CrowdNodeCategory("BEHAVE", "Behavior", items=[
+        NodeItem("CrowdManager_WanderBehaviorNode")
+    ]),
+    CrowdNodeCategory("POINT", "Point", items=[
+        NodeItem("CrowdManager_ObjectPointScatterNode")
+    ]),
 ]
 
 class CrowdManager_NodeSettingsPanel(Panel):
