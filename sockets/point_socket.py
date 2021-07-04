@@ -7,7 +7,7 @@ class CrowdManager_PointSocket(bpy.types.NodeSocket):
 	bl_idname = 'CrowdManager_PointSocketType'
 	bl_label = 'Point Socket'
 
-	points : bpy.props.StringProperty(name="Points", default="{}", update=updateParameter)
+	points : bpy.props.StringProperty(name="Points", default='{"points" : []}', update=updateParameter)
 
 	def draw(self, context, layout, node, text):
 		layout.label(text=text)

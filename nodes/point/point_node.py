@@ -1,7 +1,8 @@
 import bpy
+import json
 from bpy.props import *
 from ..base_node import CrowdManagerBaseNode
-from ...sockets.utils import point_list_to_string, string_to_point_list
+from ...types import CrowdManager_Point as CM_Point
 class CrowdManager_PointNode(bpy.types.Node, CrowdManagerBaseNode):
     bl_idname = 'CrowdManager_PointNode'
     bl_label = 'Point'
@@ -21,8 +22,14 @@ class CrowdManager_PointNode(bpy.types.Node, CrowdManagerBaseNode):
         layout.prop(self, "point_rotation")
     
     def update(self):
-        pnt = [self.point_location, self.point_rotation]
+        l = [self.point_location.x, self.point_location.y, self.point_location.z]
+        r = [self.point_rotation.x, self.point_rotation.y, self.point_rotation.z]
+        pnt = CM_Point(l, r)
+
+        points = {"points" : []}
+
+        points["points"].append(pnt.toJSON())
 
         if len(self.outputs) > 0:
-            self.outputs[0].points = point_list_to_string([pnt])
+            self.outputs[0].points = json.dumps(points)
         self.link_update()

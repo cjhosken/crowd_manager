@@ -1,7 +1,7 @@
 import bpy
+import json
 from bpy.props import *
 from ..base_node import CrowdManagerBaseNode
-from ...sockets.utils import point_list_to_string, string_to_point_list
 
 class CrowdManager_PointJoinNode(bpy.types.Node, CrowdManagerBaseNode):
     bl_idname = 'CrowdManager_PointJoinNode'
@@ -25,22 +25,6 @@ class CrowdManager_PointJoinNode(bpy.types.Node, CrowdManagerBaseNode):
     def edit(self):
         node0 = self.get_linked_node(0)
         node1 = self.get_linked_node(1)
-
-        if node0 is None:
-            if node1 is None:
-                out = []
-            else:
-                out = string_to_point_list(node1.outputs[0].points)
-        elif node1 is None:
-            out = string_to_point_list(node0.outputs[0].points)
-        else:
-            pnts0 = string_to_point_list(node0.outputs[0].points)
-            pnts1 = string_to_point_list(node1.outputs[0].points)
-            out = pnts0 + pnts1
-
-        
-        if len(self.outputs) > 0:
-            self.outputs[0].points = point_list_to_string(out)
 
         self.link_update()
         

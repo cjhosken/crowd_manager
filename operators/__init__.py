@@ -28,10 +28,12 @@ class CrowdManager_OT_Simulate(bpy.types.Operator):
     bl_description = "Simulates crowd agents."
     bl_options = {"REGISTER", "UNDO"}
 
-    json_agents : StringProperty(name="Agents")
+    agents : StringProperty(name="Agents")
 
     def execute(self, context):
-        agents = json.loads(self.json_agents)["agents"]
+        agents = json.loads(self.agents)["agents"]
+
+        print(agents)
 
         context.scene.frame_set(context.scene.frame_start)
 

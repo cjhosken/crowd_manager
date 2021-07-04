@@ -8,7 +8,7 @@ class CrowdManager_AgentSocket(bpy.types.NodeSocket):
     bl_idname = 'CrowdManager_AgentSocketType'
     bl_label = 'Agent Socket'
 
-    agents : bpy.props.StringProperty(name="Agents", default="[]", update=updateParameter)
+    agents : bpy.props.StringProperty(name="Agents", default='{"agents" : []}', update=updateParameter)
 
     def draw(self, context, layout, node, text):
         layout.label(text=text)

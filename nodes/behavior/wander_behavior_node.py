@@ -12,6 +12,7 @@ class CrowdManager_WanderBehaviorNode(bpy.types.Node, CrowdManagerBaseNode):
         import random
         self._loc[0] += random.random()
         self._loc[1] += random.random()
+        self._loc[2] = 0
         """
 
 

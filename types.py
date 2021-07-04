@@ -1,34 +1,45 @@
+import json
 import bpy
-class Agent():
+
+class CrowdManager_Point:
+    location = [0, 0, 0]
+    rotation = [0, 0, 0]
+
+    def __init__(self, loc, rot):
+        self.location = loc
+        self.rotation = rot
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+
+class CrowdManager_Agent:
+    _id = 0
+    _ob = None
+    _code = ""
+    _bLoc = [0.0, 0.0, 0.0]
+    _bRot = [0.0, 0.0, 0.0]
+    _loc = [0.0, 0.0, 0.0]
+    _rot = [0.0, 0.0, 0.0]
+
     def __init__(self, code, pnt, id):
+        print(pnt)
         self._id = id
+        self._code = code
         self._bLoc = pnt[0]
-        self._loc = pnt[0]
         self._bRot = pnt[1]
-        self._rot = pnt[0]
-        self.vis()
+        self._ob = self.vis()
 
     def vis(self):
-        col = Agent.getAgentCollection()
-        self.ob = Agent.addAgentToCollection(self, col)
+        col = CrowdManager_Agent.getAgentCollection()
+        return CrowdManager_Agent.addAgentToCollection(self, col)
 
     def update(self):
         self.exec_code()
-        self.ob.location = self._loc
-        self.ob.keyframe_insert(data_path="location", frame=bpy.context.scene.frame_current)
+        self._ob.location = self._bLoc
+        self._ob.keyframe_insert(data_path="location", frame=bpy.context.scene.frame_current)
 
     def exec_code(self):
         exec(self.code)
-
-
-
-
-
-
-
-
-
-
 
     def addAgentToCollection(agent, col):
         if len(col.objects) > 0:
@@ -60,3 +71,6 @@ class Agent():
             bpy.context.scene.collection.children.link(collection)
 
         return collection
+    
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
