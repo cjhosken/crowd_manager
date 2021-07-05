@@ -1,19 +1,5 @@
-import json
-import bpy
 
-class CrowdManager_Point:
-    location = [0, 0, 0]
-    rotation = [0, 0, 0]
 
-    def __init__(self, loc, rot):
-        self.location = loc
-        self.rotation = rot
-
-    def toDict(self):
-        return {
-            "location" : self.location,
-            "rotation" : self.rotation
-        }
 
 class CrowdManager_Agent:
     _id = 0

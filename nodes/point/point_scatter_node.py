@@ -6,7 +6,7 @@ import json
 import math
 from random import uniform, random, randrange
 from mathutils import Vector
-from ...types import CrowdManager_Point as CM_Point
+from ...types.point import CM_PointList, CM_Point
 
 class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
     bl_idname = 'CrowdManager_PointScatterNode'
@@ -69,6 +69,9 @@ class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
         update=CrowdManagerBaseNode.property_changed
     )
 
+    points : bpy.props.StringProperty(name="Points", default=CM_PointList().toJSON())
+
+
     def init(self, context):
         super().__init__()
         self.outputs.new('CrowdManager_PointSocketType', "Points")
@@ -82,18 +85,16 @@ class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
             self.draw_poisson(context, layout)
 
     def edit(self):
-        points = {"points" : []}
-        if len(self.outputs) > 0 and self.outputs[0].links:
-            if self.scatter_type == "POISSON":
-                points = self.generatePoissonPoints()
-            elif self.scatter_type == "GRID":
-                points = self.generateGridPoints()
+        self.points = CM_PointList().toJSON()
+        points = CM_PointList(dict=CM_PointList.fromJSON(self.points))
+        if self.scatter_type == "POISSON":
+            points = self.generatePoissonPoints(points)
+        elif self.scatter_type == "GRID":
+            points = self.generateGridPoints(points)
 
-            self.outputs[0].points = json.dumps(points)
-        self.update()
-
-    def update(self):
+        self.outputs[0].points = points.toJSON()
         self.link_update()
+        
 
 # Grid Scattering
 #################################################
@@ -102,19 +103,18 @@ class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
         col.prop(self, "grid_point_spacing")
         col.prop(self, "grid_size")
     
-    def generateGridPoints(self):
+    def generateGridPoints(self, points):
         w = self.grid_size[0]
         l = self.grid_size[1]
         h = self.grid_size[2]
 
-        points = {"points" : []}
         gs = self.grid_point_spacing 
 
         for x in range(w):
             for y in range(l):
                 for z in range(h):
                     pnt = CM_Point([x*gs, y*gs, z*gs], [0.0, 0.0, 0.0])
-                    points["points"].append(pnt.toDict())
+                    points.add(pnt)
         return points
 
 # Poisson Disk Scattering
@@ -126,10 +126,9 @@ class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
         col.prop(self, "num_sample_before_rejection")
 
 
-    def generatePoissonPoints(self):
+    def generatePoissonPoints(self, points):
         cell_size = self.radius / math.sqrt(2)
         grid = [[0 for j in range(math.ceil(self.sample_region_size.y / cell_size))] for i in range(math.ceil(self.sample_region_size.x / cell_size))]
-        points = {"points" : []}
         spawn_points = []
         spawn_points.append(self.sample_region_size / 2)
 
@@ -143,9 +142,9 @@ class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
                 direction = Vector((math.sin(angle), math.cos(angle), 0))
                 candidate = spawn_center + direction * uniform(self.radius, 2 * self.radius)
                 if self.isValid(candidate, cell_size, points, grid):
-                    points["points"].append(CM_Point([candidate.x, candidate.y, 0], [0, 0, 0]).toDict())
+                    points.add(CM_Point([candidate.x, candidate.y, 0], [0, 0, 0]))
                     spawn_points.append(candidate)
-                    grid[int(candidate.x / cell_size)][int(candidate.y / cell_size)] = len(points["points"])
+                    grid[int(candidate.x / cell_size)][int(candidate.y / cell_size)] = len(points.points)
                     cand_accepted = True
                     break
 
@@ -166,12 +165,10 @@ class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
 
                     if point_index != -1:
                         cand = Vector((candidate.x, candidate.y, 0))
-                        point = Vector((points["points"][point_index]["location"][0], points["points"][point_index]["location"][1], 0))
+                        point = Vector((points.points[point_index].location[0], points.points[point_index].location[1], 0))
                         dist_vec = cand - point
                         dist = math.sqrt(dist_vec.x**2 + dist_vec.y**2 + dist_vec.z**2)
                         if dist < self.radius:
                             return False
             return True
         return False
-
-        

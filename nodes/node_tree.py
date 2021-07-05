@@ -17,27 +17,11 @@ class CrowdNodeCategory(NodeCategory):
         return context.space_data.tree_type == 'crowdmanager_node_tree'
 
 nodeCategories = [
-    CrowdNodeCategory("OBJECT", "Object", items=[
-        NodeItem("CrowdManager_ObjectInputNode"),
-        NodeItem("CrowdManager_CollectionInputNode"),
-        NodeItem("CrowdManager_CollectionToObjectNode"),
-        NodeItem("CrowdManager_ObjectToCollectionNode")
-    ]),
-    CrowdNodeCategory("AGENT", "Agent", items=[
-        NodeItem("CrowdManager_AgentNode")
-    ]),
-    CrowdNodeCategory("CROWD", "Crowd", items=[
-        NodeItem("CrowdManager_PopulateAgentsNode"),
-        NodeItem("CrowdManager_CrowdOutputNode"),
-    ]),
-    CrowdNodeCategory("BEHAVE", "Behavior", items=[
-        NodeItem("CrowdManager_JitterBehaviorNode")
-    ]),
     CrowdNodeCategory("POINT", "Point", items=[
         NodeItem("CrowdManager_PointNode"),
         NodeItem("CrowdManager_PointScatterNode"),
         NodeItem("CrowdManager_PointJoinNode"),
-        #NodeItem("CrowdManager_PointViewerNode"),
+        NodeItem("CrowdManager_PointViewerNode"),
     ]),
 ]
 

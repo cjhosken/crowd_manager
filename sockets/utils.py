@@ -1,9 +1,15 @@
 import time, ast
 
-def updateNodeSocketValue(lock, passedSelf, passedValue, passedSleepTime):
+def updatePointNodeSocketValue(lock, passedSelf, passedValue, passedSleepTime):
 	time.sleep(passedSleepTime)
-	if passedSelf.value != passedValue:
-		passedSelf.value = passedValue
+	try:
+		if passedSelf.points != passedValue:
+			passedSelf.points = passedValue
+		passedSelf.points = passedValue
+	except AttributeError:
+		pass
+		
+
 	
 def updateParameter(self,context):
 	try:
