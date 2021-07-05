@@ -9,6 +9,7 @@ class CrowdManager_CrowdSocket(bpy.types.NodeSocket):
 	bl_label = 'Crowd Socket'
 
 	crowd_collection : PointerProperty(type=bpy.types.Collection, update=updateParameter)
+	agent_collection : PointerProperty(type=bpy.types.Collection, update=updateParameter)
 
 	def draw(self, context, layout, node, text):
 		layout.label(text=text)

@@ -46,8 +46,8 @@ class CrowdManagerBaseNode:
         self.edit()
         self.update()
 
-
     def socket_value_update(self, context):
+        print('connect')
         self.refresh()
     
     def link_update(self):

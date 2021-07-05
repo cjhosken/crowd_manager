@@ -31,11 +31,11 @@ nodeCategories = [
         NodeItem("CrowdManager_CrowdOutputNode"),
     ]),
     CrowdNodeCategory("BEHAVE", "Behavior", items=[
-        NodeItem("CrowdManager_WanderBehaviorNode")
+        NodeItem("CrowdManager_JitterBehaviorNode")
     ]),
     CrowdNodeCategory("POINT", "Point", items=[
         NodeItem("CrowdManager_PointNode"),
-        #NodeItem("CrowdManager_PointScatterNode"),
+        NodeItem("CrowdManager_PointScatterNode"),
         NodeItem("CrowdManager_PointJoinNode"),
         #NodeItem("CrowdManager_PointViewerNode"),
     ]),

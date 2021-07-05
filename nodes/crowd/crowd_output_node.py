@@ -9,7 +9,7 @@ class CrowdManager_CrowdOutputNode(bpy.types.Node, CrowdManagerBaseNode):
 
     node_type = "crowd"
 
-    crowd_collection : bpy.props.PointerProperty(type=bpy.types.Collection)
+    final_collection : bpy.props.PointerProperty(type=bpy.types.Collection)
     
     def init(self, context):
         super().__init__()
@@ -17,8 +17,8 @@ class CrowdManager_CrowdOutputNode(bpy.types.Node, CrowdManagerBaseNode):
 
     def draw_buttons(self, context, layout):
         row = layout.row()
-        row.prop(self, "crowd_collection", text="")
+        row.prop(self, "final_collection", text="")
         row.operator("crowdmanager.create_collection", text="", icon='PLUS').collection_name = "CROWD_Crowd"
     
     def edit(self):
-        pass
+        node = self.get_linked_node(0)  

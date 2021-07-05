@@ -10,7 +10,7 @@ class CrowdManager_AgentNode(bpy.types.Node, CrowdManagerBaseNode):
 
     node_type = "agent"
 
-    agents = {"agents" : []}
+    agents = {"agents" : [], "simulated" : False}
     code = ""
 
     def init(self, context):
@@ -27,7 +27,8 @@ class CrowdManager_AgentNode(bpy.types.Node, CrowdManagerBaseNode):
         node_bh = self.get_linked_node(0)
         node_pn = self.get_linked_node(1)
         
-        self.agents = {"agents" : []}
+        if node_pn is None:
+            agents = {"agents" : [], "simulated" : False}
 
         if node_pn is not None and len(json.loads(node_pn.outputs[0].points)["points"]) > 0:
             CM_Agent.clearAgentCollection(CM_Agent.getAgentCollection())
@@ -38,12 +39,13 @@ class CrowdManager_AgentNode(bpy.types.Node, CrowdManagerBaseNode):
 
             for i, p in enumerate(pnts):
                 ag = CM_Agent(self.code, p, i)
-                self.agents["agents"].append(ag.toJSON())
+                self.agents["agents"].append(ag.toDict())
 
-        elif node_pn is not None and len(json.loads(node_pn.outputs[0].points)["points"]) <= 0:
+        elif node_pn is None or len(json.loads(node_pn.outputs[0].points)["points"]) <= 0:
             CM_Agent.clearAgentCollection(CM_Agent.getAgentCollection())
-            self.agents = {"agents" : []}
+            agents = {"agents" : [], "simulated" : False}
 
         self.outputs[0].agents = json.dumps(self.agents)
 
+    def update(self):
         self.link_update()

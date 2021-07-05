@@ -26,6 +26,24 @@ class CrowdManager_PointJoinNode(bpy.types.Node, CrowdManagerBaseNode):
         node0 = self.get_linked_node(0)
         node1 = self.get_linked_node(1)
 
+        out_points = {"points" : []}
+        
+        if node0 is None: 
+            if node1 is not None:
+                out_points = node1.outputs[0].points
+        else:
+            if node1 is None:
+                out_points = node0.outputs[0].points
+            else:
+                points0 = json.loads(node0.outputs[0].points)
+                points1 = json.loads(node1.outputs[0].points)
+                for p0 in points0["points"]:
+                    out_points["points"].append(p0)
+                for p1 in points1["points"]:
+                    out_points["points"].append(p1)
+        
+        if len(self.outputs) > 0:
+            self.outputs[0].points = json.dumps(out_points)
         self.link_update()
         
 

@@ -12,6 +12,7 @@ class CrowdManager_PointNode(bpy.types.Node, CrowdManagerBaseNode):
 
     point_location : bpy.props.FloatVectorProperty(name="Location", subtype="TRANSLATION", default=(0, 0, 0), update = CrowdManagerBaseNode.property_changed)
     point_rotation : bpy.props.FloatVectorProperty(name="Rotation", subtype="EULER", default=(0, 0, 0), update = CrowdManagerBaseNode.property_changed)
+    points = {"points" : []}
 
     def init(self, context):
         super().__init__()
@@ -21,15 +22,20 @@ class CrowdManager_PointNode(bpy.types.Node, CrowdManagerBaseNode):
         layout.prop(self, "point_location")
         layout.prop(self, "point_rotation")
     
-    def update(self):
+    def edit(self):
         l = [self.point_location.x, self.point_location.y, self.point_location.z]
         r = [self.point_rotation.x, self.point_rotation.y, self.point_rotation.z]
         pnt = CM_Point(l, r)
 
-        points = {"points" : []}
-
-        points["points"].append(pnt.toJSON())
+        
+        tmp_points = {"points" : []}
+        tmp_points["points"].append(pnt.toDict())
+        self.points = tmp_points
 
         if len(self.outputs) > 0:
-            self.outputs[0].points = json.dumps(points)
+            self.outputs[0].points = json.dumps(self.points)
+
+        self.update()
+
+    def update(self):
         self.link_update()
