@@ -1,8 +1,7 @@
 import bpy
-import json
 from bpy.props import *
 from ..base_node import CrowdManagerBaseNode
-from ...types import CrowdManager_Point as CM_Point
+from ...types.point import CM_PointList, CM_Point
 class CrowdManager_PointNode(bpy.types.Node, CrowdManagerBaseNode):
     bl_idname = 'CrowdManager_PointNode'
     bl_label = 'Point'
@@ -12,7 +11,7 @@ class CrowdManager_PointNode(bpy.types.Node, CrowdManagerBaseNode):
 
     point_location : bpy.props.FloatVectorProperty(name="Location", subtype="TRANSLATION", default=(0, 0, 0), update = CrowdManagerBaseNode.property_changed)
     point_rotation : bpy.props.FloatVectorProperty(name="Rotation", subtype="EULER", default=(0, 0, 0), update = CrowdManagerBaseNode.property_changed)
-    points = {"points" : []}
+    points : bpy.props.StringProperty(name="Points", default=CM_PointList().toJSON())
 
     def init(self, context):
         super().__init__()
@@ -23,19 +22,23 @@ class CrowdManager_PointNode(bpy.types.Node, CrowdManagerBaseNode):
         layout.prop(self, "point_rotation")
     
     def edit(self):
-        l = [self.point_location.x, self.point_location.y, self.point_location.z]
-        r = [self.point_rotation.x, self.point_rotation.y, self.point_rotation.z]
-        pnt = CM_Point(l, r)
+        points = CM_PointList(dict=CM_PointList.fromJSON(self.points))
 
-        
-        tmp_points = {"points" : []}
-        tmp_points["points"].append(pnt.toDict())
-        self.points = tmp_points
+        loc = [self.point_location.x, self.point_location.y, self.point_location.z]
+        rot = [self.point_rotation.x, self.point_rotation.y, self.point_rotation.z]
 
-        if len(self.outputs) > 0:
-            self.outputs[0].points = json.dumps(self.points)
+        if len(points.points) == 0:
+            pnt = CM_Point(loc=loc, rot=rot)
+            points.add(pnt)
+            self.link_update()
 
-        self.update()
+        else:
+            if points.points[0].location != loc or points.points[0].rotation != rot:
+                points.points[0].set(loc=loc, rot=rot)
+                self.link_update()
 
-    def update(self):
-        self.link_update()
+        print("POINT: " + str(len(points.points)))
+
+        self.points = points.toJSON()
+        self.outputs[0].points = self.points
+

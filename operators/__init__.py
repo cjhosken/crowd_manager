@@ -1,7 +1,6 @@
 import bpy
 import json
 from bpy.props import *
-from ..types import CrowdManager_Agent as CM_Agent, CrowdManager_Point as CM_Point
 
 class CrowdManager_OT_CreateCollection(bpy.types.Operator):
     bl_label = "Create Collection"
@@ -39,13 +38,13 @@ class CrowdManager_OT_Simulate(bpy.types.Operator):
         f = 0
         e = context.scene.frame_end - (context.scene.frame_start + 1)
         while context.scene.frame_current <= context.scene.frame_end:
-            for a in agents:
-                ag = CM_Agent(id=a["id"], pnt=CM_Point(a["bLoc"], a["bRot"]).toDict(), code=a["code"], obname=a["obname"])
-                if ag._ob is not None:
-                    if context.scene.frame_current == context.scene.frame_start + 1:
-                        ag.clear()
-                    ag.update()
-                print(f"SIMULATING FRAME {context.scene.frame_current} - {((f / e)*100):.2f}%")
+            #for a in agents:
+                #ag = CM_Agent(id=a["id"], pnt=CM_Point(a["bLoc"], a["bRot"]).toDict(), code=a["code"], obname=a["obname"])
+                #if ag._ob is not None:
+                #    if context.scene.frame_current == context.scene.frame_start + 1:
+                #        ag.clear()
+                #    ag.update()
+                #print(f"SIMULATING FRAME {context.scene.frame_current} - {((f / e)*100):.2f}%")
             
             context.scene.frame_set(context.scene.frame_current + 1)
             f += 1

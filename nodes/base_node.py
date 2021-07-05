@@ -41,14 +41,14 @@ class CrowdManagerBaseNode:
     def property_changed(self, context=None):
         self.id_data.update()
         self.refresh()
+        self.link_update()
     
     def refresh(self):
         self.edit()
-        self.update()
 
     def socket_value_update(self, context):
-        print('connect')
         self.refresh()
+        self.link_update()
     
     def link_update(self):
         for o in self.outputs:
