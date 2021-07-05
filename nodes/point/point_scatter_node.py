@@ -128,7 +128,7 @@ class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
 
     def generatePoissonPoints(self, points):
         cell_size = self.radius / math.sqrt(2)
-        grid = [[0 for j in range(math.ceil(self.sample_region_size.y / cell_size))] for i in range(math.ceil(self.sample_region_size.x / cell_size))]
+        grid = [[[0 for j in range(math.ceil(self.sample_region_size.y / cell_size))] for i in range(math.ceil(self.sample_region_size.x / cell_size))] for k in range(math.ceil(self.sample_region_size.z / cell_size))]
         spawn_points = []
         spawn_points.append(self.sample_region_size / 2)
 
@@ -139,12 +139,12 @@ class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
 
             for i in range(self.num_sample_before_rejection):
                 angle = random() * math.pi * 2
-                direction = Vector((math.sin(angle), math.cos(angle), 0))
+                direction = Vector((math.sin(angle), math.cos(angle), math.tan(angle)))
                 candidate = spawn_center + direction * uniform(self.radius, 2 * self.radius)
                 if self.isValid(candidate, cell_size, points, grid):
-                    points.add(CM_Point([candidate.x, candidate.y, 0], [0, 0, 0]))
+                    points.add(CM_Point([candidate.x, candidate.y, candidate.z], [0, 0, 0]))
                     spawn_points.append(candidate)
-                    grid[int(candidate.x / cell_size)][int(candidate.y / cell_size)] = len(points.points)
+                    grid[int(candidate.z / cell_size)][int(candidate.x / cell_size)][int(candidate.y / cell_size)] = len(points.points)
                     cand_accepted = True
                     break
 
@@ -154,21 +154,22 @@ class CrowdManager_PointScatterNode(bpy.types.Node, CrowdManagerBaseNode):
         return points
 
     def isValid(self, candidate, cell_size, points, grid):
-        if candidate.x >= 0 and candidate.x < self.sample_region_size.x and candidate.y >= 0 and candidate.y < self.sample_region_size.y:
+        if candidate.x >= 0 and candidate.x < self.sample_region_size.x and candidate.y >= 0 and candidate.y < self.sample_region_size.y and candidate.z >= 0 and candidate.z < self.sample_region_size.z:
             cell = candidate / cell_size
-            search_start = Vector((max(0, int(cell.x) - 2), max(0, int(cell.y) - 2), 0))
-            search_end = Vector((min(int(cell.x) + 2, len(grid) - 1), min(int(cell.y) + 2, len(grid[0]) - 1), 0))
+            search_start = Vector((max(0, int(cell.x) - 2), max(0, int(cell.y) - 2), max(0, int(cell.z) - 2)))
+            search_end = Vector((min(int(cell.x) + 2, len(grid[0]) - 1), min(int(cell.y) + 2, len(grid[0][0]) - 1), min(int(cell.z) + 2, len(grid) - 1)))
 
             for x in range(int(search_start.x), int(search_end.x + 1)):
                 for y in range(int(search_start.y), int(search_end.y + 1)):
-                    point_index = grid[x][y] - 1
+                    for z in range(int(search_start.z), int(search_end.z + 1)):
+                        point_index = grid[z][x][y] - 1
 
-                    if point_index != -1:
-                        cand = Vector((candidate.x, candidate.y, 0))
-                        point = Vector((points.points[point_index].location[0], points.points[point_index].location[1], 0))
-                        dist_vec = cand - point
-                        dist = math.sqrt(dist_vec.x**2 + dist_vec.y**2 + dist_vec.z**2)
-                        if dist < self.radius:
-                            return False
+                        if point_index != -1:
+                            cand = Vector((candidate.x, candidate.y, candidate.z))
+                            point = Vector((points.points[point_index].location[0], points.points[point_index].location[1], points.points[point_index].location[2]))
+                            dist_vec = cand - point
+                            dist = math.sqrt(dist_vec.x**2 + dist_vec.y**2 + dist_vec.z**2)
+                            if dist < self.radius:
+                                return False
             return True
         return False

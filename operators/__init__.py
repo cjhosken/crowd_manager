@@ -1,6 +1,7 @@
 import bpy
 import json
 from bpy.props import *
+from ..types.agent import CM_Agent, CM_AgentList
 
 class CrowdManager_OT_CreateCollection(bpy.types.Operator):
     bl_label = "Create Collection"
@@ -28,28 +29,27 @@ class CrowdManager_OT_Simulate(bpy.types.Operator):
     bl_description = "Simulates crowd agents."
     bl_options = {"REGISTER", "UNDO"}
 
-    agents : StringProperty(name="Agents")
+    agents : bpy.props.StringProperty(name="Points", default=CM_AgentList().toJSON())
 
     def execute(self, context):
-        agents = json.loads(self.agents)["agents"]
+        agents = CM_AgentList(dict=CM_AgentList.fromJSON(self.agents))
 
-        context.scene.frame_set(context.scene.frame_start + 1)
+        context.scene.frame_set(context.scene.frame_start)
 
         f = 0
-        e = context.scene.frame_end - (context.scene.frame_start + 1)
+        e = context.scene.frame_end - context.scene.frame_start
         while context.scene.frame_current <= context.scene.frame_end:
-            #for a in agents:
-                #ag = CM_Agent(id=a["id"], pnt=CM_Point(a["bLoc"], a["bRot"]).toDict(), code=a["code"], obname=a["obname"])
-                #if ag._ob is not None:
-                #    if context.scene.frame_current == context.scene.frame_start + 1:
-                #        ag.clear()
-                #    ag.update()
-                #print(f"SIMULATING FRAME {context.scene.frame_current} - {((f / e)*100):.2f}%")
+            for ag in agents.agents:
+                if context.scene.frame_current == context.scene.frame_start:
+                    ag.sim_start = context.scene.frame_start
+                ag.sim(context)
+                print(f"SIMULATING FRAME {context.scene.frame_current} - {((f / e)*100):.2f}%")
             
             context.scene.frame_set(context.scene.frame_current + 1)
             f += 1
             
         context.scene.frame_set(context.scene.frame_start)
+        print(agents.agents[0].toDict())
         return {'FINISHED'}
 
 

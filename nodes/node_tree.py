@@ -23,6 +23,13 @@ nodeCategories = [
         NodeItem("CrowdManager_PointJoinNode"),
         NodeItem("CrowdManager_PointViewerNode"),
     ]),
+    CrowdNodeCategory("BEHAVE", "Behavior", items=[
+        NodeItem("CrowdManager_JitterBehaviorNode"),
+    ]),
+    CrowdNodeCategory("AGENT", "Agent", items=[
+        NodeItem("CrowdManager_AgentNode"),
+        NodeItem("CrowdManager_AgentViewerNode"),
+    ])
 ]
 
 class CrowdManager_NodeSettingsPanel(Panel):

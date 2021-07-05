@@ -37,8 +37,6 @@ class CrowdManager_PointNode(bpy.types.Node, CrowdManagerBaseNode):
                 points.points[0].set(loc=loc, rot=rot)
                 self.link_update()
 
-        print("POINT: " + str(len(points.points)))
-
         self.points = points.toJSON()
         self.outputs[0].points = self.points
 
