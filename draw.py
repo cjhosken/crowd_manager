@@ -5,7 +5,8 @@ import gpu
 import bgl
 from gpu_extras.batch import batch_for_shader
 
-handle = None
+viewhandle = None
+framehandle = None
 
 def viewport_draw():
     if bpy.context and bpy.context.area:
@@ -24,4 +25,10 @@ def viewport_draw():
         bgl.glPointSize(10)
         shader.bind()
         batch.draw(shader)
-        
+
+def frame_handler(scene, depsgraph):
+    for n in bpy.data.node_groups:
+        if n.bl_idname == "crowdmanager_node_tree":
+            for node in n.nodes:
+                if node.bl_idname == "CrowdManager_AgentViewerNode":
+                    node.edit()

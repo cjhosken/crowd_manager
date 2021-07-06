@@ -22,7 +22,13 @@ class CrowdManager_AgentNode(bpy.types.Node, CrowdManagerBaseNode):
         self.outputs.new('CrowdManager_AgentSocketType', "Agents")
 
     def draw_buttons(self, context, layout):
-        layout.operator("crowdmanager.simulate", text='Simulate', icon='BOIDS').agents = self.outputs[0].agents
+
+        agents = CM_AgentList(dict=CM_AgentList.fromJSON(self.agents))
+
+        if not agents.simulated:
+            layout.operator("crowdmanager.simulate", text='Simulate', icon='BOIDS').node_name = self.name
+        else:
+            layout.label(text="desimulate")
     
     def edit(self):
         self.agents = CM_AgentList().toJSON()
@@ -41,7 +47,8 @@ class CrowdManager_AgentNode(bpy.types.Node, CrowdManagerBaseNode):
                 ag = CM_Agent(p, code=code)
                 agents.add(ag)
         
-        self.outputs[0].agents = agents.toJSON()
+        self.agents = agents.toJSON()
+        self.outputs[0].agents = self.agents
         self.link_update()
 
     def update(self):

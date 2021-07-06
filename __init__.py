@@ -44,11 +44,11 @@ classes += socket_classes
 
 auto_load.init()
 
-from .draw import handle, viewport_draw
+from .draw import viewhandle, framehandle, viewport_draw, frame_handler
 import bpy
 
 def register():
-    global handle
+    global viewhandle, framehandle
     from bpy.utils import register_class
     from .nodes.node_tree import nodeCategories
     
@@ -56,17 +56,20 @@ def register():
         register_class(cls)
 
     nodeitems_utils.register_node_categories('CROWDMANAGER_NODES', nodeCategories)
-    handle = bpy.types.SpaceView3D.draw_handler_add(viewport_draw, (), 'WINDOW', 'POST_VIEW')
+    viewhandle = bpy.types.SpaceView3D.draw_handler_add(viewport_draw, (), 'WINDOW', 'POST_VIEW')
+    framehandle = bpy.app.handlers.frame_change_post.append(frame_handler)
 
 def unregister():
-    global handle
+    global viewhandle, framehandle
     from bpy.utils import unregister_class
 
     for cls in reversed(classes):
         unregister_class(cls)
 
     nodeitems_utils.unregister_node_categories('CROWDMANAGER_NODES')
-    bpy.types.SpaceView3D.draw_handler_remove(handle, 'WINDOW')
+    bpy.types.SpaceView3D.draw_handler_remove(viewhandle, 'WINDOW')
+    if framehandle in bpy.app.handlers.frame_change_post:
+        bpy.app.handlers.frame_change_post.remove(framehandle)
 
 if __name__ == "__main__":
     try:

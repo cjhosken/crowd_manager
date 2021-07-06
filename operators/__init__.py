@@ -29,10 +29,11 @@ class CrowdManager_OT_Simulate(bpy.types.Operator):
     bl_description = "Simulates crowd agents."
     bl_options = {"REGISTER", "UNDO"}
 
-    agents : bpy.props.StringProperty(name="Points", default=CM_AgentList().toJSON())
+    node_name : bpy.props.StringProperty(name="Node", default="")
 
     def execute(self, context):
-        agents = CM_AgentList(dict=CM_AgentList.fromJSON(self.agents))
+        node = bpy.context.space_data.edit_tree.nodes.get(self.node_name)
+        agents = CM_AgentList(dict=CM_AgentList.fromJSON(node.agents))
 
         context.scene.frame_set(context.scene.frame_start)
 
@@ -49,7 +50,9 @@ class CrowdManager_OT_Simulate(bpy.types.Operator):
             f += 1
             
         context.scene.frame_set(context.scene.frame_start)
-        print(agents.agents[0].toDict())
+        agents.simulated = True
+        node.agents = agents.toJSON()
+        node.outputs[0].agents = node.agents
         return {'FINISHED'}
 
 

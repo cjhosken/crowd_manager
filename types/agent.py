@@ -26,26 +26,26 @@ class CM_Agent(CM_DataType):
         self.code = dict["code"]
         if self.simulated:
             for d in dict["sim_data"]:
-                self.sim_data.append(CM_Point(d))
+                self.sim_data.append(CM_Point(dict=d))
 
     def sim(self, context):
         if context.scene.frame_current == self.sim_start:
+            self.sim_data = []
             self.sim_data.append(self.origin)
         else:
             last = self.sim_data[-1]
-            cp = last
+            cp = last.copy()
             if len(self.code) > 0:
                 d = {}
                 exec(self.code, d)
                 tmp_loc = d["l"]
-                out_loc = last.location
-                out_loc[0] += tmp_loc[0]
-                out_loc[1] += tmp_loc[0]
-                out_loc[2] += tmp_loc[0]
-                cp = CM_Point(loc=out_loc)
+                
+                cp.location[0] += tmp_loc[0]
+                cp.location[1] += tmp_loc[1]
+                cp.location[2] += tmp_loc[2]
+            
             self.sim_data.append(cp)
         self.simulated = True
-
 
     def toDict(self):
         dict = {
@@ -74,7 +74,10 @@ class CM_AgentList(CM_DataType):
                     self.simulated = False
                     break
             else:
-                self.simulated = True
+                if len(self.agents) > 0:
+                    self.simulated = True
+                else:
+                    self.simulated = False
         else:
             self.fromDict(dict)
 

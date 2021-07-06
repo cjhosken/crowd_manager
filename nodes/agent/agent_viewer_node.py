@@ -44,8 +44,9 @@ class CrowdManager_AgentViewerNode(bpy.types.Node, CrowdManagerBaseNode):
             for a in agents.agents:
                 og = a.origin
                 if a.simulated:
-                    if bpy.context.scene.frame_current > a.sim_start and bpy.context.scene.frame_current < a.sim_start + len(a.sim_data):
+                    if bpy.context.scene.frame_current >= a.sim_start and bpy.context.scene.frame_current < a.sim_start + len(a.sim_data):
                         og = a.sim_data[bpy.context.scene.frame_current - a.sim_start]
+                        
 
                 pnt.append((og.location[0], og.location[1], og.location[2]))
                 col.append((ac[0], ac[1], ac[2], ac[3]))
@@ -87,8 +88,3 @@ class CrowdManager_AgentViewerNode(bpy.types.Node, CrowdManagerBaseNode):
                     self.edit()
                     self.clear_points()
                     self.linked = False
-    
-    #def frame_handler(scene, depsgraph):
-        #print("test")
- 
-#bpy.app.handlers.frame_change_post.append(CrowdManager_AgentViewerNode.frame_handler)

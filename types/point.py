@@ -22,11 +22,13 @@ class CM_Point(CM_DataType):
             "location" : self.location,
             "rotation" : self.rotation
         }
+    
+    def copy(self):
+        return CM_Point(self.location[:], self.rotation[:])
 
     def fromDict(self, dict):
         self.location = dict["location"]
         self.rotation = dict["rotation"]
-
 
 class CM_PointList(CM_DataType):
     points = []
