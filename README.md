@@ -5,6 +5,7 @@ Node based visual scripting designed for creating large crowds in Blender.
 
 
 current issues:
-- unable to transfer data from simulation operator back into the node.
-- current viewport frame updates for agent viewer
+- viewport speed very slow
+- simulation optimization
+- agent node sim data keeps clearing
 - 3D implementation of poisson scatter
