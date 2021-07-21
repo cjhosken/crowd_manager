@@ -1,16 +1,20 @@
-import bpy
 from ..preferences import getUserPreferences
-from .utils import updateParameter
+import bpy
 
-class CrowdManager_BehaviorSocket(bpy.types.NodeSocket):
+class CM_BehaviorSocket(bpy.types.NodeSocket):
 	'''Behavior Node Socket Type'''
-	bl_idname = 'CrowdManager_BehaviorSocketType'
+	bl_idname = 'CM_BehaviorSocketType'
 	bl_label = 'Behavior Socket'
 
-	code : bpy.props.StringProperty(default="pass")
-
+	code : bpy.props.StringProperty(name="Code", default="")
+    
 	def draw(self, context, layout, node, text):
-		layout.label(text=text)
+		label = text
+		if self.is_linked:
+			for i in self.node.inputs:
+				pass
+				
+		layout.label(text=label)
 
 	def draw_color(self, context, node):
 		prefs = getUserPreferences(context)

@@ -16,35 +16,6 @@ class CrowdNodeCategory(NodeCategory):
     def poll(cls, context):
         return context.space_data.tree_type == 'crowdmanager_node_tree'
 
-nodeCategories = [
-    CrowdNodeCategory("OBJECT", "Object", items=[
-        NodeItem("CrowdManager_ObjectInputNode"),
-        NodeItem("CrowdManager_CollectionInputNode"),
-        NodeItem("CrowdManager_ObjectToCollectionNode"),
-        NodeItem("CrowdManager_CollectionToObjectNode")
-    ]),
-
-    CrowdNodeCategory("POINT", "Point", items=[
-        NodeItem("CrowdManager_PointNode"),
-        NodeItem("CrowdManager_PointScatterNode"),
-        NodeItem("CrowdManager_PointJoinNode"),
-        NodeItem("CrowdManager_PointViewerNode"),
-    ]),
-
-    CrowdNodeCategory("AGENT", "Agent", items=[
-        NodeItem("CrowdManager_AgentNode"),
-        NodeItem("CrowdManager_AgentViewerNode"),
-    ]),
-
-    CrowdNodeCategory("BEHAVE", "Behavior", items=[
-        NodeItem("CrowdManager_JitterBehaviorNode"),
-    ]),
-
-    CrowdNodeCategory("CROWD", "Crowd", items=[
-        NodeItem("CrowdManager_CrowdNode")
-    ])
-]
-
 class CrowdManager_NodeSettingsPanel(Panel):
     bl_idname = "CROWDMANAGER_PT_settings_panel"
     bl_label = "CrowdManager"
@@ -58,6 +29,27 @@ class CrowdManager_NodeSettingsPanel(Panel):
 
     def draw(self, context):
         pass
+
+node_categories = [
+    CrowdNodeCategory("POINT", "Point", items=[
+        NodeItem("CM_PointNode"),
+        NodeItem("CM_PointGridScatterNode"),
+        NodeItem("CM_PointJoinNode"),
+        NodeItem("CM_PointTransformNode"),
+        NodeItem("CM_PointRandomizeNode"),
+        NodeItem("CM_PointViewerNode"),
+    ]),
+
+    CrowdNodeCategory("BEHAVIOR", "Behavior", items=[
+        NodeItem("CM_ScriptBehaviorNode")
+    ]),
+
+    CrowdNodeCategory("AGENT", "Agent", items=[
+        NodeItem("CM_AgentNode"),
+        NodeItem("CM_AgentViewerNode")
+    ]),
+
+]
 
 classes = [
     CrowdNodeTree,

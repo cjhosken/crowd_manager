@@ -1,17 +1,16 @@
 import bpy
-import threading
-import math
 from ..preferences import getUserPreferences
-from .utils import updateParameter, updatePointNodeSocketValue
-from ..types.point import CM_Point, CM_PointList
 
-class CrowdManager_PointSocket(bpy.types.NodeSocket):
+class CM_PointProperty(bpy.types.PropertyGroup):
+    location : bpy.props.FloatVectorProperty(name="Location", subtype="TRANSLATION", default=(0, 0, 0))
+
+class CM_PointSocket(bpy.types.NodeSocket):
 	'''Point Node Socket Type'''
-	bl_idname = 'CrowdManager_PointSocketType'
+	bl_idname = 'CM_PointSocketType'
 	bl_label = 'Point Socket'
 
-	points : bpy.props.StringProperty(name="Points", description="List of CrowdManager points", default=CM_PointList().toJSON(), update=updateParameter)
-
+	points : bpy.props.CollectionProperty(name="Points", type=CM_PointProperty)
+    
 	def draw(self, context, layout, node, text):
 		label = text
 		if self.is_linked:
