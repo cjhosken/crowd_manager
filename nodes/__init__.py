@@ -1,36 +1,30 @@
-from .node_tree import classes as node_tree_classes
-from .point.point_node import CrowdManager_PointNode
-from .point.point_scatter_node import CrowdManager_PointScatterNode
-from .point.point_viewer_node import CrowdManager_PointViewerNode
-from .point.point_join_node import CrowdManager_PointJoinNode
+from .node_tree import classes as tree_classes
+from .point.point_node import CM_PointNode
+from .point.point_grid_scatter_node import CM_PointGridScatterNode
+from .point.point_join_node import CM_PointJoinNode
+from .point.point_transform_node import CM_PointTransformNode
+from .point.point_randomize_node import CM_PointRandomizeNode
+from .point.point_viewer import CM_PointViewerNode
 
-from .object.object_input_node import CrowdManager_ObjectInputNode
-from .object.collection_input_node import CrowdManager_CollectionInputNode
-from .object.object_to_collection_node import CrowdManager_ObjectToCollectionNode
-from .object.collection_to_object_node import CrowdManager_CollectionToObjectNode
+from .behavior.script_behavior_node import CM_ScriptBehaviorNode
 
-from .behavior.jitter_behavior_node import CrowdManager_JitterBehaviorNode
+from .agent.agent_node import CM_AgentNode
+from .agent.agent_viewer_node import CM_AgentViewerNode
 
-from .agent.agent_node import CrowdManager_AgentNode
-from .agent.agent_viewer_node import CrowdManager_AgentViewerNode
 
-from .crowd.crowd_node import CrowdManager_CrowdNode
+node_classes = []
+node_classes += tree_classes
 
-node_classes = node_tree_classes + [
-        CrowdManager_PointNode,
-        CrowdManager_PointScatterNode,
-        CrowdManager_PointViewerNode,
-        CrowdManager_PointJoinNode,
+node_classes += [
+    CM_PointNode,
+    CM_PointGridScatterNode,
+    CM_PointJoinNode,
+    CM_PointTransformNode,
+    CM_PointRandomizeNode,
+    CM_PointViewerNode,
 
-        CrowdManager_ObjectInputNode,
-        CrowdManager_CollectionInputNode,
-        CrowdManager_ObjectToCollectionNode,
-        CrowdManager_CollectionToObjectNode,
+    CM_ScriptBehaviorNode,
 
-        CrowdManager_JitterBehaviorNode,
-
-        CrowdManager_AgentNode,
-        CrowdManager_AgentViewerNode,
-
-        CrowdManager_CrowdNode
-    ]
+    CM_AgentNode,
+    CM_AgentViewerNode,
+]

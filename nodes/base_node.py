@@ -1,9 +1,10 @@
+from bpy.props import BoolProperty
 from ..preferences import getUserPreferences, desaturate
 
-class CrowdManagerBaseNode:
+class CM_BaseNode:
     @classmethod
     def poll(cls, ntree):
-        return ntree.bl_idname == 'CrowdNodeTree'
+        return ntree.bl_idname == 'crowdmanager_node_tree'
 
     node_type = None
 
@@ -19,9 +20,9 @@ class CrowdManagerBaseNode:
     def update(self):
         '''Dont use this, use edit() instead.'''
         '''Only use update for input nodes'''
-    
+
     def edit(self):
-        self.link_update()
+        pass
 
     # Don't override these functions
     ######################################
@@ -29,62 +30,53 @@ class CrowdManagerBaseNode:
     def __init__(self):
         self.name = self.bl_label
         self.label = self.bl_label
-        if getUserPreferences().use_node_colors:
-            self.use_custom_color = True
-            self.color = self.getNodeColoring()
-        else:
-            self.use_custom_color = False
-
+    
     def draw_label(self):
         return self.name
-    
+
     def property_changed(self, context=None):
         self.id_data.update()
-        self.refresh()
-        self.link_update()
-    
-    def refresh(self):
         self.edit()
+        self.linked_update()
 
-    def socket_value_update(self, context):
-        self.refresh()
-        self.link_update()
-    
-    def link_update(self):
+    def linked_update(self):
         for o in self.outputs:
             if o.is_linked:
                 if len(o.links) > 0:
                     for l in o.links:
                         if l.is_valid:
-                            l.to_node.refresh()
+                            l.to_node.edit()
+                            l.to_node.linked_update()
     
-    def remove_link(self, link):
-        self.refresh()
-
-    def insert_link(self, link):
-        self.refresh()
-        if type(link.to_socket) != type(link.from_socket):
-            link.is_valid = False
-    
-    def get_linked_node(self, socket_id=0, link_id=0):
-        if socket_id < len(self.inputs):
-            link = self.inputs[socket_id]
-            if link.is_linked and len(link.links) > 0 and link.links[link_id].is_valid:
-                node = link.links[link_id].from_node
-                return node
-        return None
-    
-    def get_linked_nodes(self, socket_id=0):
+    def get_input_node(self, idx=None, multi=False):
         nodes = []
-        if socket_id < len(self.inputs):
-            link = self.inputs[socket_id]
-            if link.is_linked and len(link.links) > 0:
-                for l in link.links:
-                    if l.is_valid:
-                        nodes.append(l.from_node)
-                if len(nodes) > 0:
-                    return nodes
+        if idx is None:
+            for i in self.inputs:
+                if i.is_linked:
+                    if len(i.links) > 0:
+                        for l in i.links:
+                            if l.is_valid:
+                                if l.from_node.outputs[0].bl_idname == l.to_node.inputs[0].bl_idname:
+                                    nodes.append(l.from_node)
+
+            return nodes
+        else:
+            if len(self.inputs) > idx:
+                i = self.inputs[idx]
+                if i.is_linked:
+                    if len(i.links) > 0:
+                        if multi:
+                            for l in i.links:
+                                if l.is_valid:
+                                    if l.from_node.outputs[0].bl_idname == l.to_node.inputs[0].bl_idname:
+                                        return i.links[0].from_node
+                        else:
+                            if i.links[0].is_valid:
+                                if i.links[0].from_node.outputs[0].bl_idname == i.links[0].to_node.inputs[idx].bl_idname:
+                                    return i.links[0].from_node
+
         return None
+
 
     # Extra Utilities
     ####################################################

@@ -30,46 +30,39 @@ bl_info = {
 }
 
 from . import auto_load
-from .nodes import node_classes
-from .sockets import socket_classes
-from .operators import operator_classes
+from . import gl_view
 from .preferences import classes as preference_classes
+from .operators import operator_classes
+from .sockets import socket_classes
+from .nodes import node_classes
 import nodeitems_utils
 
 classes = []
 classes += preference_classes
 classes += operator_classes
-classes += node_classes
 classes += socket_classes
+classes += node_classes
 
 auto_load.init()
 
-from .draw import viewhandle, framehandle, viewport_draw, frame_handler
-import bpy
-
 def register():
-    global viewhandle, framehandle
     from bpy.utils import register_class
-    from .nodes.node_tree import nodeCategories
-    
+    from .nodes.node_tree import node_categories
+
     for cls in classes:
         register_class(cls)
 
-    nodeitems_utils.register_node_categories('CROWDMANAGER_NODES', nodeCategories)
-    viewhandle = bpy.types.SpaceView3D.draw_handler_add(viewport_draw, (), 'WINDOW', 'POST_VIEW')
-    framehandle = bpy.app.handlers.frame_change_post.append(frame_handler)
+    nodeitems_utils.register_node_categories('CROWDMANAGER_NODES', node_categories)
+    gl_view.register()
 
 def unregister():
-    global viewhandle, framehandle
     from bpy.utils import unregister_class
 
     for cls in reversed(classes):
         unregister_class(cls)
-
+    
     nodeitems_utils.unregister_node_categories('CROWDMANAGER_NODES')
-    bpy.types.SpaceView3D.draw_handler_remove(viewhandle, 'WINDOW')
-    if framehandle in bpy.app.handlers.frame_change_post:
-        bpy.app.handlers.frame_change_post.remove(framehandle)
+    gl_view.unregister()
 
 if __name__ == "__main__":
     try:

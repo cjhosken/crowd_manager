@@ -1,20 +1,29 @@
-import bpy
-from bpy.props import BoolProperty
+from bpy.props import IntProperty
+from .point_socket import CM_PointProperty
 from ..preferences import getUserPreferences
-from .utils import updateParameter
-from ..types.agent import CM_Agent, CM_AgentList
+import bpy
 
-class CrowdManager_AgentSocket(bpy.types.NodeSocket):
-    '''Agent Node Socket Type'''
-    bl_idname = 'CrowdManager_AgentSocketType'
-    bl_label = 'Agent Socket'
+class CM_AgentProperty(bpy.types.PropertyGroup):    
+    simulated : bpy.props.BoolProperty(name="Simulate", default=False)
+    sim_start : IntProperty(name="sim start", default=0)
+    sim : bpy.props.CollectionProperty(name="Sim", type=CM_PointProperty)
 
-    agents : bpy.props.StringProperty(name="Agents", description="List of CrowdManager agents", default=CM_AgentList().toJSON(), update=updateParameter)
+class CM_AgentSocket(bpy.types.NodeSocket):
+	'''Agent Node Socket Type'''
+	bl_idname = 'CM_AgentSocketType'
+	bl_label = 'Agent Socket'
 
-    def draw(self, context, layout, node, text):
-        layout.label(text=text)
+	agents : bpy.props.CollectionProperty(name="Agents", type=CM_AgentProperty)
+    
+	def draw(self, context, layout, node, text):
+		label = text
+		if self.is_linked:
+			for i in self.node.inputs:
+				pass
+				
+		layout.label(text=label)
 
-    def draw_color(self, context, node):
-        prefs = getUserPreferences(context)
-        color = prefs.agent_node_color
-        return (color[0], color[1], color[2], 1)
+	def draw_color(self, context, node):
+		prefs = getUserPreferences(context)
+		color = prefs.agent_node_color
+		return (color[0], color[1], color[2], 1)
