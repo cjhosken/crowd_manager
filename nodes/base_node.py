@@ -8,6 +8,7 @@ class CrowdManager_BaseNode:
     ######################################
     node_id : StringProperty(default="")
     broken : BoolProperty(default=False)
+    linked : BoolProperty(default=False)
     node_types = []
 
 
@@ -89,6 +90,20 @@ class CrowdManager_BaseNode:
 
     def free(self):
         self.linked_update()
+
+    def update(self):
+        for o in self.outputs:
+            if o.links:
+                if not self.linked:
+                    self.linked = True
+                    self.edit()
+                    self.linked_update()
+            else:
+                if self.linked:
+                    self.linked = False
+                    self.edit()
+                    self.linked_update()
+
 
     # Extra Utilities
     ####################################################

@@ -22,7 +22,7 @@ class CrowdManager_AgentNode(bpy.types.Node, CrowdManager_BaseNode):
         node0 = self.get_input_node(0)
         node1 = self.get_input_node(1)
         if not self.simulated:
-            if node0 is None and node1 is None or len(node1.outputs[0].points) < 1:
+            if node0 is None or node1 is None or len(node1.outputs[0].points) < 1 or len(node0.outputs[0].code) < 1:
                 layout.enabled = False
             layout.operator("crowdmanager.simulate", text='Simulate', icon='BOIDS').node_data = self.node_id
         else:

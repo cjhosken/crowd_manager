@@ -58,6 +58,14 @@ class CrowdManager_OT_Simulate(bpy.types.Operator):
         node.linked_update()
         return {'FINISHED'}
 
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+    
+    def draw(self, context):
+        self.layout.label(text="Are you sure you want to simulate your agents?") 
+        self.layout.label(text="This may take some time.")
+        
+
 class CrowdManager_OT_DeSimulate(bpy.types.Operator):
     bl_label = "Clear Simulated Crowds"
     bl_idname = "crowdmanager.desimulate"
@@ -83,5 +91,12 @@ class CrowdManager_OT_DeSimulate(bpy.types.Operator):
         node.simulated = False
         node.linked_update()
         return {'FINISHED'}
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+    
+    def draw(self, context):
+        self.layout.label(text="Are you sure you want to clear your simulation?") 
+        self.layout.label(text="You cannot get it back again.")
 
 simulate_classes = [CrowdManager_OT_Simulate, CrowdManager_OT_DeSimulate]
