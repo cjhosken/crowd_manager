@@ -1,4 +1,5 @@
 import bpy
+import json
 from bpy.props import *
 from ..base_node import CM_BaseNode
 
@@ -8,7 +9,6 @@ class CM_ScriptBehaviorNode(bpy.types.Node, CM_BaseNode):
     bl_width_default = 150
 
     script : bpy.props.PointerProperty(type=bpy.types.Text)
-    button : bpy.props.BoolProperty(default = False, update=CM_BaseNode.property_changed)
 
     node_type = ["behavior"]
 
@@ -17,8 +17,9 @@ class CM_ScriptBehaviorNode(bpy.types.Node, CM_BaseNode):
         self.outputs.new("CM_BehaviorSocketType", "Behavior")
 
     def draw_buttons(self, context, layout):
-        layout.prop(self, "script", text="")
-        layout.prop(self, "button")
+        row = layout.row()
+        row.prop(self, "script", text="")
+        row.operator("crowdmanager.refreshnode", text="", icon="FILE_REFRESH").node_data = self.node_id
     
     def edit(self):
         code = ""
@@ -29,4 +30,17 @@ class CM_ScriptBehaviorNode(bpy.types.Node, CM_BaseNode):
         self.outputs[0].code = code
         
         self.linked_update()
-        
+
+class CM_RefreshNode(bpy.types.Operator):
+    bl_label = "Refresh Node"
+    bl_idname = "crowdmanager.refreshnode"
+    bl_description = "Refreshes node."
+    bl_options = {"REGISTER", "UNDO"}
+
+    node_data : bpy.props.StringProperty(name="Node", default="")
+
+    def execute(self, context):
+        data = json.loads(self.node_data)
+        node = bpy.data.node_groups[data[1]].nodes[data[0]]
+        node.edit()
+        return {'FINISHED'}

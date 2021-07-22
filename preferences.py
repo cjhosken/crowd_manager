@@ -1,5 +1,6 @@
 import bpy
 from bpy.props import *
+from bpy_types import Menu
 
 class CrowdManager_Preferences(bpy.types.AddonPreferences):
     bl_idname = __package__
@@ -101,3 +102,5 @@ def desaturate(c, f=0.5):
         c[1] + f * (L - c[1]),
         c[2] + f * (L - c[2]),
     )
+
+

@@ -40,14 +40,26 @@ node_categories = [
         NodeItem("CM_PointViewerNode"),
     ]),
 
+    CrowdNodeCategory("OBJECT", "Object", items=[
+        NodeItem("CM_ObjectInputNode"),
+    ]),
+
     CrowdNodeCategory("BEHAVIOR", "Behavior", items=[
-        NodeItem("CM_ScriptBehaviorNode")
+        NodeItem("CM_JitterBehaviorNode"),
+        NodeItem("CM_ConstantBehaviorNode"),
+        NodeItem("CM_ScriptBehaviorNode"),
+        NodeItem("CM_MergeBehaviorNode"),
+        NodeItem("CM_ScriptReaderNode"),
     ]),
 
     CrowdNodeCategory("AGENT", "Agent", items=[
         NodeItem("CM_AgentNode"),
         NodeItem("CM_AgentViewerNode")
     ]),
+
+    CrowdNodeCategory("CROWD", "Crowd", items=[
+        NodeItem("CM_CrowdNode")
+    ])
 
 ]
 

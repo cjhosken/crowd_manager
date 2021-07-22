@@ -25,9 +25,13 @@ def get_viewer_nodes():
 
 def cm_draw_handler():
     if bpy.context and bpy.context.area:
-        shader = gpu.shader.from_builtin("3D_SMOOTH_COLOR")
         points = []
         colors = []
+
+        shader = gpu.shader.from_builtin('3D_SMOOTH_COLOR')
+        bgl.glEnable(bgl.GL_BLEND)
+        bgl.glEnable(bgl.GL_LINE_SMOOTH)
+        bgl.glEnable(bgl.GL_DEPTH_TEST)
 
         nodes = get_viewer_nodes()
 
@@ -42,7 +46,7 @@ def cm_draw_handler():
                 if n.GL_AGENTS is not None and len(n.GL_AGENTS) > 0:
                     for a in n.GL_AGENTS:
                         if a.simulated == True:
-                            points.append(a.sim[bpy.context.scene.frame_current - a.sim_start].location)
+                            points.append(a.sim[bpy.context.scene.frame_current - a.sim_start - 1].location)
                             colors.append(n.GL_COLOR)
                         else:
                             points.append(a.sim[0].location)

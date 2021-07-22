@@ -11,19 +11,15 @@ class CM_AgentNode(bpy.types.Node, CM_BaseNode):
 
     simulated : BoolProperty(default=False)
 
-    node_id : StringProperty(default="")
-
     code : StringProperty(default="")
 
     def init(self, context):
         super().__init__()
         self.inputs.new('CM_BehaviorSocketType', "Behavior")
         self.inputs.new('CM_PointSocketType', "Points")
-
         self.outputs.new('CM_AgentSocketType', "Agents")
 
     def draw_buttons(self, context, layout):
-        pass
         if not self.simulated:
             layout.operator("crowdmanager.simulate", text='Simulate', icon='BOIDS').node_data = self.node_id
         else:
@@ -47,5 +43,3 @@ class CM_AgentNode(bpy.types.Node, CM_BaseNode):
                 ag = agents.add()
                 x = ag.sim.add()
                 x.location = p.location
-
-        self.node_id = json.dumps([str(self.name), str(self.id_data.name)])

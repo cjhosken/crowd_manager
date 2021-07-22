@@ -1,7 +1,11 @@
-from bpy.props import BoolProperty
+from bpy.props import BoolProperty, StringProperty
 from ..preferences import getUserPreferences, desaturate
+import json
 
 class CM_BaseNode:
+
+    node_id : StringProperty(default="")
+
     @classmethod
     def poll(cls, ntree):
         return ntree.bl_idname == 'crowdmanager_node_tree'
@@ -30,6 +34,7 @@ class CM_BaseNode:
     def __init__(self):
         self.name = self.bl_label
         self.label = self.bl_label
+        self.node_id = json.dumps([str(self.name), str(self.id_data.name)])
     
     def draw_label(self):
         return self.name

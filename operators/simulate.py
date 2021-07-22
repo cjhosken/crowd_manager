@@ -10,6 +10,8 @@ class CM_OT_Simulate(bpy.types.Operator):
     node_data : bpy.props.StringProperty(name="Node", default="")
 
     def execute(self, context):
+        wm = context.window_manager
+        tot = 100
         data = json.loads(self.node_data)
         node = bpy.data.node_groups[data[1]].nodes[data[0]]
 
@@ -21,6 +23,7 @@ class CM_OT_Simulate(bpy.types.Operator):
 
         f = 0
         e = context.scene.frame_end - context.scene.frame_start
+        wm.progress_begin(0, tot)
         while context.scene.frame_current <= context.scene.frame_end:
             for AGENT in agents:
                 AGENT.simulated = True
@@ -28,25 +31,36 @@ class CM_OT_Simulate(bpy.types.Operator):
                     AGENT.sim_start = context.scene.frame_start
                 else:
                     if code is not None and len(code) > 0:
-                        var = {}
+                        AGENTS = agents
+                        AGENT = AGENT
+                        FRAME = context.scene.frame_current
+                        LAST_SIM = AGENT.sim[-1]
+
+                        var = {
+                            "AGENTS": agents,
+                            "AGENT": AGENT,
+                            "FRAME": context.scene.frame_current,
+                            "LAST_SIM": AGENT.sim[-1]
+                        }
                         exec(code, var)
 
-                        var_loc = var["LOCATION"]
+                        out = var["OUTPUT"]
                         s = AGENT.sim.add()
-                        s.location = var_loc
-                        print(s.location)
+                        s.location = out[0]
                     else:
                         s = AGENT.sim.add()
 
                 print(f"SIMULATING FRAME {context.scene.frame_current} - {((f / e)*100):.2f}%")
-                print(len(AGENT.sim))
+                wm.progress_update(f)
             
             context.scene.frame_set(context.scene.frame_current + 1)
             f += 1
-            
+
+        wm.progress_end()
         context.scene.frame_set(context.scene.frame_start)
 
         node.simulated = True
+        node.linked_update()
         return {'FINISHED'}
 
 class CM_OT_DeSimulate(bpy.types.Operator):
@@ -68,9 +82,12 @@ class CM_OT_DeSimulate(bpy.types.Operator):
             a.sim.clear()
             a.sim.add()
             a.location = tmp.location
+            a.sim_start = context.scene.frame_start
+            a.simulated = False
 
 
         node.simulated = False
+        node.linked_update()
         return {'FINISHED'}
 
 simulate_classes = [CM_OT_Simulate, CM_OT_DeSimulate]
