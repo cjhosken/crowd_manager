@@ -35,6 +35,11 @@ class CM_BaseNode:
         self.name = self.bl_label
         self.label = self.bl_label
         self.node_id = json.dumps([str(self.name), str(self.id_data.name)])
+        if getUserPreferences().use_node_colors:
+            self.use_custom_color = True
+            self.color = self.getNodeColoring()
+        else:
+            self.use_custom_color = False
     
     def draw_label(self):
         return self.name
@@ -87,7 +92,7 @@ class CM_BaseNode:
     ####################################################
 
     def getNodeColoring(self):
-        type_id = ["object", "collection", "point", "behavior", "agent", "crowd"].index(self.node_type)
+        type_id = ["object", "collection", "point", "behavior", "agent", "crowd"].index(self.node_type[0])
         prefs = getUserPreferences()
         color = desaturate([
             prefs.object_node_color,
