@@ -1,19 +1,17 @@
 import bpy
-from bpy.props import *
-from ..base_node import CM_BaseNode
-from ...sockets.point_socket import CM_PointProperty
+from ..base_node import CrowdManager_BaseNode
 
-class CM_PointJoinNode(bpy.types.Node, CM_BaseNode):
-    bl_idname = 'CM_PointJoinNode'
+class CrowdManager_PointJoinNode(bpy.types.Node, CrowdManager_BaseNode):
+    bl_idname = 'CrowdManager_PointJoinNode'
     bl_label = 'Join Points'
 
-    node_type = ["point"]
+    node_types = ["point"]
 
     def init(self, context):
         super().__init__()
-        self.inputs.new('CM_PointSocketType', "Points")
-        self.inputs.new('CM_PointSocketType', "Points")
-        self.outputs.new('CM_PointSocketType', "Points")
+        self.inputs.new('CrowdManager_PointSocketType', "Points")
+        self.inputs.new('CrowdManager_PointSocketType', "Points")
+        self.outputs.new('CrowdManager_PointSocketType', "Points")
 
     def draw_buttons(self, context, layout):
         pass

@@ -1,16 +1,20 @@
+import json
 from bpy.props import BoolProperty, StringProperty
 from ..preferences import getUserPreferences, desaturate
-import json
 
-class CM_BaseNode:
+class CrowdManager_BaseNode:
 
+    # Properties
+    ######################################
     node_id : StringProperty(default="")
+    broken : BoolProperty(default=False)
+    node_types = []
+
 
     @classmethod
     def poll(cls, ntree):
         return ntree.bl_idname == 'crowdmanager_node_tree'
 
-    node_type = None
 
     # Functions subclasses can override
     ######################################
@@ -35,11 +39,7 @@ class CM_BaseNode:
         self.name = self.bl_label
         self.label = self.bl_label
         self.node_id = json.dumps([str(self.name), str(self.id_data.name)])
-        if getUserPreferences().use_node_colors:
-            self.use_custom_color = True
-            self.color = self.getNodeColoring()
-        else:
-            self.use_custom_color = False
+        self.setNodeColoring()
     
     def draw_label(self):
         return self.name
@@ -87,12 +87,14 @@ class CM_BaseNode:
 
         return None
 
+    def free(self):
+        self.linked_update()
 
     # Extra Utilities
     ####################################################
 
     def getNodeColoring(self):
-        type_id = ["object", "collection", "point", "behavior", "agent", "crowd"].index(self.node_type[0])
+        type_id = ["object", "collection", "point", "behavior", "agent", "crowd"].index(self.node_types[0])
         prefs = getUserPreferences()
         color = desaturate([
             prefs.object_node_color,
@@ -104,3 +106,10 @@ class CM_BaseNode:
         ][type_id], prefs.node_saturation)
 
         return color
+
+    def setNodeColoring(self):
+        if getUserPreferences().use_node_colors:
+            self.use_custom_color = True
+            self.color = self.getNodeColoring()
+        else:
+            self.use_custom_color = False

@@ -1,17 +1,13 @@
 import bpy
-from bpy.props import *
-from ..base_node import CM_BaseNode
+from bpy.props import IntVectorProperty, FloatProperty, IntProperty
+from ..base_node import CrowdManager_BaseNode
 
-import json
-import math
-from random import uniform, random, randrange
-from mathutils import Vector
-
-class CM_PointGridScatterNode(bpy.types.Node, CM_BaseNode):
-    bl_idname = 'CM_PointGridScatterNode'
+class CrowdManager_PointGridScatterNode(bpy.types.Node, CrowdManager_BaseNode):
+    bl_idname = 'CrowdManager_PointGridScatterNode'
     bl_label = 'Point Grid Scatter'
+    bl_width_default = 150
 
-    node_type = ["point"]
+    node_types = ["point"]
 
     grid_size : IntVectorProperty(
         name="Point Grid Size",
@@ -20,7 +16,7 @@ class CM_PointGridScatterNode(bpy.types.Node, CM_BaseNode):
         default=(10, 10, 1),
         soft_min=1,
         min=1,
-        update=CM_BaseNode.property_changed
+        update=CrowdManager_BaseNode.property_changed
     )
 
     grid_point_spacing : FloatProperty(
@@ -28,7 +24,7 @@ class CM_PointGridScatterNode(bpy.types.Node, CM_BaseNode):
         default=1,
         soft_min=0.1,
         min=0.1,
-        update=CM_BaseNode.property_changed
+        update=CrowdManager_BaseNode.property_changed
     )
 
     num_sample_before_rejection : IntProperty(
@@ -36,17 +32,16 @@ class CM_PointGridScatterNode(bpy.types.Node, CM_BaseNode):
         default=5,
         soft_min=1,
         min=1,
-        update=CM_BaseNode.property_changed
+        update=CrowdManager_BaseNode.property_changed
     )
-
 
     def init(self, context):
         super().__init__()
-        self.outputs.new('CM_PointSocketType', "Points")
+        self.outputs.new('CrowdManager_PointSocketType', "Points")
 
     def draw_buttons(self, context, layout):
         col = layout.column()
-        col.prop(self, "grid_point_spacing")
+        col.prop(self, "grid_point_spacing", text="Grid Spacing ")
         col.prop(self, "grid_size")
 
     def edit(self):
@@ -73,3 +68,7 @@ class CM_PointGridScatterNode(bpy.types.Node, CM_BaseNode):
                 for z in range(h):
                     points.append((x*gs, y*gs, z*gs))
         return points
+
+    def free(self):
+        self.outputs[0].points.clear()
+        self.linked_update()

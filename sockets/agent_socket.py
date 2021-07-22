@@ -1,27 +1,22 @@
-from bpy.props import IntProperty
-from .point_socket import CM_PointProperty
+from bpy.props import IntProperty, BoolProperty, CollectionProperty
+from bpy.types import PropertyGroup, NodeSocket
+from .point_socket import CrowdManager_PointProperty
 from ..preferences import getUserPreferences
-import bpy
 
-class CM_AgentProperty(bpy.types.PropertyGroup):    
-    simulated : bpy.props.BoolProperty(name="Simulate", default=False)
+class CrowdManager_AgentProperty(PropertyGroup):    
+    simulated : BoolProperty(name="Simulate", default=False)
     sim_start : IntProperty(name="sim start", default=0)
-    sim : bpy.props.CollectionProperty(name="Sim", type=CM_PointProperty)
+    sim : CollectionProperty(name="Sim", type=CrowdManager_PointProperty)
 
-class CM_AgentSocket(bpy.types.NodeSocket):
+class CrowdManager_AgentSocket(NodeSocket):
 	'''Agent Node Socket Type'''
-	bl_idname = 'CM_AgentSocketType'
+	bl_idname = 'CrowdManager_AgentSocketType'
 	bl_label = 'Agent Socket'
 
-	agents : bpy.props.CollectionProperty(name="Agents", type=CM_AgentProperty)
+	agents : CollectionProperty(name="Agents", type=CrowdManager_AgentProperty)
     
-	def draw(self, context, layout, node, text):
-		label = text
-		if self.is_linked:
-			for i in self.node.inputs:
-				pass
-				
-		layout.label(text=label)
+	def draw(self, context, layout, node, text):				
+		layout.label(text=text)
 
 	def draw_color(self, context, node):
 		prefs = getUserPreferences(context)

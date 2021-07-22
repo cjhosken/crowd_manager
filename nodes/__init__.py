@@ -1,50 +1,48 @@
 from .node_tree import classes as tree_classes
-from .point.point_node import CM_PointNode
-from .point.point_grid_scatter_node import CM_PointGridScatterNode
-from .point.point_join_node import CM_PointJoinNode
-from .point.point_transform_node import CM_PointTransformNode
-from .point.point_randomize_node import CM_PointRandomizeNode
-from .point.point_viewer import CM_PointViewerNode
+from .point.point_node import CrowdManager_PointNode
+from .point.point_grid_scatter_node import CrowdManager_PointGridScatterNode
+from .point.point_join_node import CrowdManager_PointJoinNode
+from .point.point_transform_node import CrowdManager_PointTransformNode
+from .point.point_randomize_node import CrowdManager_PointRandomizeNode
+from .point.point_viewer import CrowdManager_PointViewerNode
 
-from .object.object_input_node import CM_ObjectInputNode
+from .object.object_input_node import CrowdManager_ObjectInputNode
 
-from .behavior.jitter_behavior_node import CM_JitterBehaviorNode
-from .behavior.constant_behavior_node import CM_ConstantBehaviorNode
-from .behavior.script_behavior_node import CM_ScriptBehaviorNode, CM_RefreshNode
-from .behavior.merge_behavior_node import CM_MergeBehaviorNode
-from .behavior.script_reader_node import CM_ScriptReaderNode
+from .behavior.jitter_behavior_node import CrowdManager_JitterBehaviorNode
+from .behavior.script_behavior_node import CrowdManager_ScriptBehaviorNode, CrowdManager_OT_NodeRefresh
+from .behavior.merge_behavior_node import CrowdManager_MergeBehaviorNode
+from .behavior.behavior_reader_node import CrowdManager_BehaviorReaderNode, CrowdManager_OT_SaveBehavior
 
-from .agent.agent_node import CM_AgentNode
-from .agent.agent_viewer_node import CM_AgentViewerNode
+from .agent.agent_node import CrowdManager_AgentNode
+from .agent.agent_viewer_node import CrowdManager_AgentViewerNode
 
-from .crowd.crowd_node import CM_CrowdNode
+from .crowd.crowd_node import CrowdManager_CrowdNode
 
 
 node_classes = []
 node_classes += tree_classes
 
 node_classes += [
-    CM_PointNode,
-    CM_PointGridScatterNode,
-    CM_PointJoinNode,
-    CM_PointTransformNode,
-    CM_PointRandomizeNode,
-    CM_PointViewerNode,
+    CrowdManager_PointNode,
+    CrowdManager_PointGridScatterNode,
+    CrowdManager_PointJoinNode,
+    CrowdManager_PointTransformNode,
+    CrowdManager_PointRandomizeNode,
+    CrowdManager_PointViewerNode,
 
-    CM_ObjectInputNode,
+    CrowdManager_ObjectInputNode,
 
-    CM_RefreshNode,
+    CrowdManager_OT_NodeRefresh,
     
+    CrowdManager_JitterBehaviorNode,
 
-    CM_JitterBehaviorNode,
-    CM_ConstantBehaviorNode,
+    CrowdManager_ScriptBehaviorNode,
+    CrowdManager_MergeBehaviorNode,
+    CrowdManager_BehaviorReaderNode,
+    CrowdManager_OT_SaveBehavior,
 
-    CM_ScriptBehaviorNode,
-    CM_MergeBehaviorNode,
-    CM_ScriptReaderNode,
+    CrowdManager_AgentNode,
+    CrowdManager_AgentViewerNode,
 
-    CM_AgentNode,
-    CM_AgentViewerNode,
-
-    CM_CrowdNode,
+    CrowdManager_CrowdNode,
 ]

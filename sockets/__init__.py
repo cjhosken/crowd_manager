@@ -1,16 +1,16 @@
-from .point_socket import CM_PointSocket, CM_PointProperty
-from .object_socket import CM_ObjectSocket
-from .agent_socket import CM_AgentSocket, CM_AgentProperty
-from .behavior_socket import CM_BehaviorSocket
+from .point_socket import CrowdManager_PointSocket, CrowdManager_PointProperty
+from .object_socket import CrowdManager_ObjectSocket
+from .agent_socket import CrowdManager_AgentSocket, CrowdManager_AgentProperty
+from .behavior_socket import CrowdManager_BehaviorSocket
 
 socket_classes = [
-    CM_PointProperty,
-    CM_PointSocket,
+    CrowdManager_PointProperty,
+    CrowdManager_PointSocket,
 
-    CM_ObjectSocket,
+    CrowdManager_ObjectSocket,
 
-    CM_BehaviorSocket,
+    CrowdManager_BehaviorSocket,
 
-    CM_AgentProperty,
-    CM_AgentSocket,
+    CrowdManager_AgentProperty,
+    CrowdManager_AgentSocket,
     ]

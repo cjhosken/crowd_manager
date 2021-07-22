@@ -5,56 +5,53 @@ from gpu_extras.batch import batch_for_shader
 
 SpaceView3D = bpy.types.SpaceView3D
 handlers = bpy.app.handlers
-cm_frame_handle = None
-cm_draw_handle = None
 
-cm_draw_nodes_list = {}
+CROWDMANAGER_FRAME_HANDLE = None
+CROWDMANAGER_DRAW_HANDLE = None
 
-def cm_frame_handler(scene, depsgraph):
-    cm_draw_handler()
+CROWDMANAGER_DRAW_NODES_LIST = {}
 
 def get_viewer_nodes():
     nodes = []
-    for n in bpy.data.node_groups:
-        if n.bl_idname == "crowdmanager_node_tree":
-            for node in n.nodes:
-                if "viewer" in node.node_type:
+    for ntree in bpy.data.node_groups:
+        if ntree.bl_idname == "crowdmanager_node_tree":
+            for node in ntree.nodes:
+                if "viewer" in node.node_types:
                     nodes.append(node)
     
     return nodes
 
-def cm_draw_handler():
+def crowdmanager_draw_handler():
+    crowdmanager_gl_draw()
+
+def crowdmanager_frame_handler(scene, depsgraph):
+    crowdmanager_gl_draw()
+
+def crowdmanager_gl_draw():
     if bpy.context and bpy.context.area:
-        points = []
+        shader = gpu.shader.from_builtin('3D_SMOOTH_COLOR')
+        nodes = get_viewer_nodes()
+        points = [] 
         colors = []
 
-        shader = gpu.shader.from_builtin('3D_SMOOTH_COLOR')
-        bgl.glEnable(bgl.GL_BLEND)
-        bgl.glEnable(bgl.GL_LINE_SMOOTH)
-        bgl.glEnable(bgl.GL_DEPTH_TEST)
+        for node in nodes:
+            if "point" in node.node_types:
+                if node.GL_POINTS is not None and len(node.GL_POINTS) > 0:
+                    for point in node.GL_POINTS:
+                        points.append(point.location)
+                        colors.append(node.GL_COLOR)
 
-        nodes = get_viewer_nodes()
-
-        for n in nodes:
-            if "point" in n.node_type:
-                if n.GL_POINTS is not None and len(n.GL_POINTS) > 0:
-                    for p in n.GL_POINTS:
-                        points.append(p.location)
-                        colors.append(n.GL_COLOR)
-
-            elif "agent" in n.node_type:
-                if n.GL_AGENTS is not None and len(n.GL_AGENTS) > 0:
-                    for a in n.GL_AGENTS:
-                        if a.simulated == True:
-                            points.append(a.sim[bpy.context.scene.frame_current - a.sim_start - 1].location)
-                            colors.append(n.GL_COLOR)
+            elif "agent" in node.node_types:
+                if node.GL_AGENTS is not None and len(node.GL_AGENTS) > 0:
+                    for agent in node.GL_AGENTS:
+                        if agent.simulated == True:
+                            points.append(agent.sim[bpy.context.scene.frame_current - agent.sim_start - 1].location)
+                            colors.append(node.GL_COLOR)
                         else:
-                            points.append(a.sim[0].location)
-                            colors.append(n.GL_COLOR)
-            else:
-                pass
+                            points.append(agent.sim[0].location)
+                            colors.append(node.GL_COLOR)
 
-        
+
         batch = batch_for_shader(shader, 'POINTS', {'pos': points, 'color': colors})
         bgl.glPointSize(10)
         shader.bind()
@@ -62,14 +59,14 @@ def cm_draw_handler():
 
 
 def register():
-    global cm_frame_handle, cm_draw_handle
-    cm_draw_handle = SpaceView3D.draw_handler_add(cm_draw_handler, (), 'WINDOW', 'POST_VIEW')
-    cm_frame_handle = handlers.frame_change_post.append(cm_frame_handler)
+    global CROWDMANAGER_FRAME_HANDLE, CROWDMANAGER_DRAW_HANDLE
+    CROWDMANAGER_DRAW_HANDLE = SpaceView3D.draw_handler_add(crowdmanager_draw_handler, (), 'WINDOW', 'POST_VIEW')
+    CROWDMANAGER_FRAME_HANDLE = handlers.frame_change_post.append(crowdmanager_frame_handler)
 
 def unregister():
-    global cm_frame_handle, cm_draw_handle
+    global CROWDMANAGER_FRAME_HANDLE, CROWDMANAGER_DRAW_HANDLE
 
-    if cm_frame_handle in handlers.frame_change_post:
-        handlers.frame_change_post.remove(cm_frame_handle)
+    if CROWDMANAGER_FRAME_HANDLE in handlers.frame_change_post:
+        handlers.frame_change_post.remove(CROWDMANAGER_FRAME_HANDLE)
     
-    SpaceView3D.draw_handler_remove(cm_draw_handle, 'WINDOW')
+    SpaceView3D.draw_handler_remove(CROWDMANAGER_DRAW_HANDLE, 'WINDOW')

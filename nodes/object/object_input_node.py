@@ -1,27 +1,31 @@
 import bpy
-from bpy.props import *
-from ..base_node import CM_BaseNode
+from bpy.types import Node, Object
+from ..base_node import CrowdManager_BaseNode
 
-class CM_ObjectInputNode(bpy.types.Node, CM_BaseNode):
-    '''Object Input Node'''
-    bl_idname = 'CM_ObjectInputNode'
+class CrowdManager_ObjectInputNode(Node, CrowdManager_BaseNode):
+    bl_idname = 'CrowdManager_ObjectInputNode'
     bl_label = 'Object'
 
-    node_type = ["object"]
+    node_types = ["object"]
 
-    ref_object : PointerProperty(
+    object : bpy.props.PointerProperty(
         name="Object",
-        type=bpy.types.Object,
-        update = CM_BaseNode.property_changed
+        description="Object input",
+        type=Object,
+        update = CrowdManager_BaseNode.property_changed
     )
     
     def init(self, context):
         super().__init__()
-        self.outputs.new('CM_ObjectSocketType', "Object")
+        self.outputs.new('CrowdManager_ObjectSocketType', "Object")
 
     def draw_buttons(self, context, layout):
-        layout.prop(self, "ref_object")
+        layout.prop(self, "object", text="")
     
     def edit(self):
-        self.outputs[0].object = self.ref_object
+        self.outputs[0].object = self.object
+        self.linked_update()
+    
+    def free(self):
+        self.outputs[0].object = None
         self.linked_update()

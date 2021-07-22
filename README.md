@@ -5,5 +5,5 @@ Node based visual scripting designed for creating large crowds in Blender.
 
 
 current issues:
-- viewport speed very slow
-- simulation optimization
+- node connecting / disconnecting updates
+- node "errors"

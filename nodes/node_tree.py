@@ -1,6 +1,5 @@
-from bpy.types import *
-from bpy_types import *
-from nodeitems_utils import *
+from bpy.types import NodeTree, Panel
+from nodeitems_utils import NodeCategory, NodeItem
 
 class CrowdNodeTree(NodeTree):
     '''CrowdManager node editor'''
@@ -17,7 +16,7 @@ class CrowdNodeCategory(NodeCategory):
         return context.space_data.tree_type == 'crowdmanager_node_tree'
 
 class CrowdManager_NodeSettingsPanel(Panel):
-    bl_idname = "CROWDMANAGER_PT_settings_panel"
+    bl_idname = "CROWDMANAGER_PT_SettingsPanel"
     bl_label = "CrowdManager"
     bl_space_type = "NODE_EDITOR"
     bl_region_type = "UI"
@@ -32,33 +31,32 @@ class CrowdManager_NodeSettingsPanel(Panel):
 
 node_categories = [
     CrowdNodeCategory("POINT", "Point", items=[
-        NodeItem("CM_PointNode"),
-        NodeItem("CM_PointGridScatterNode"),
-        NodeItem("CM_PointJoinNode"),
-        NodeItem("CM_PointTransformNode"),
-        NodeItem("CM_PointRandomizeNode"),
-        NodeItem("CM_PointViewerNode"),
+        NodeItem("CrowdManager_PointNode"),
+        NodeItem("CrowdManager_PointGridScatterNode"),
+        NodeItem("CrowdManager_PointJoinNode"),
+        NodeItem("CrowdManager_PointTransformNode"),
+        NodeItem("CrowdManager_PointRandomizeNode"),
+        NodeItem("CrowdManager_PointViewerNode"),
     ]),
 
     CrowdNodeCategory("OBJECT", "Object", items=[
-        NodeItem("CM_ObjectInputNode"),
+        NodeItem("CrowdManager_ObjectInputNode"),
     ]),
 
     CrowdNodeCategory("BEHAVIOR", "Behavior", items=[
-        NodeItem("CM_JitterBehaviorNode"),
-        NodeItem("CM_ConstantBehaviorNode"),
-        NodeItem("CM_ScriptBehaviorNode"),
-        NodeItem("CM_MergeBehaviorNode"),
-        NodeItem("CM_ScriptReaderNode"),
+        NodeItem("CrowdManager_JitterBehaviorNode"),
+        NodeItem("CrowdManager_ScriptBehaviorNode"),
+        NodeItem("CrowdManager_MergeBehaviorNode"),
+        NodeItem("CrowdManager_BehaviorReaderNode"),
     ]),
 
     CrowdNodeCategory("AGENT", "Agent", items=[
-        NodeItem("CM_AgentNode"),
-        NodeItem("CM_AgentViewerNode")
+        NodeItem("CrowdManager_AgentNode"),
+        NodeItem("CrowdManager_AgentViewerNode")
     ]),
 
     CrowdNodeCategory("CROWD", "Crowd", items=[
-        NodeItem("CM_CrowdNode")
+        NodeItem("CrowdManager_CrowdNode")
     ])
 
 ]

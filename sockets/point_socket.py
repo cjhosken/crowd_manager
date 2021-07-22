@@ -1,23 +1,20 @@
-import bpy
+from bpy.types import PropertyGroup, NodeSocket
+from bpy.props import FloatVectorProperty, CollectionProperty
 from ..preferences import getUserPreferences
 
-class CM_PointProperty(bpy.types.PropertyGroup):
-    location : bpy.props.FloatVectorProperty(name="Location", subtype="TRANSLATION", default=(0, 0, 0))
+class CrowdManager_PointProperty(PropertyGroup):
+	location : FloatVectorProperty(name="Location", subtype="TRANSLATION", default=(0, 0, 0))
+	rotation : FloatVectorProperty(name="Rotation", subtype="EULER", default=(0, 0, 0))
 
-class CM_PointSocket(bpy.types.NodeSocket):
+class CrowdManager_PointSocket(NodeSocket):
 	'''Point Node Socket Type'''
-	bl_idname = 'CM_PointSocketType'
+	bl_idname = 'CrowdManager_PointSocketType'
 	bl_label = 'Point Socket'
 
-	points : bpy.props.CollectionProperty(name="Points", type=CM_PointProperty)
+	points : CollectionProperty(name="Points", type=CrowdManager_PointProperty)
     
-	def draw(self, context, layout, node, text):
-		label = text
-		if self.is_linked:
-			for i in self.node.inputs:
-				pass
-				
-		layout.label(text=label)
+	def draw(self, context, layout, node, text):	
+		layout.label(text=text)
 
 	def draw_color(self, context, node):
 		prefs = getUserPreferences(context)

@@ -1,20 +1,17 @@
-from ..preferences import getUserPreferences
 import bpy
+from bpy.types import Object, NodeSocket
+from ..preferences import getUserPreferences
 
-class CM_ObjectSocket(bpy.types.NodeSocket):
+
+class CrowdManager_ObjectSocket(NodeSocket):
 	'''Behavior Node Socket Type'''
-	bl_idname = 'CM_ObjectSocketType'
+	bl_idname = 'CrowdManager_ObjectSocketType'
 	bl_label = 'Object Socket'
 
-	object : bpy.props.PointerProperty(type=bpy.types.Object)
+	object : bpy.props.PointerProperty(type=Object)
     
 	def draw(self, context, layout, node, text):
-		label = text
-		if self.is_linked:
-			for i in self.node.inputs:
-				pass
-				
-		layout.label(text=label)
+		layout.label(text=text)
 
 	def draw_color(self, context, node):
 		prefs = getUserPreferences(context)

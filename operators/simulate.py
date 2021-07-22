@@ -1,17 +1,16 @@
 import bpy
 import json
 
-class CM_OT_Simulate(bpy.types.Operator):
+class CrowdManager_OT_Simulate(bpy.types.Operator):
     bl_label = "Simulate Crowds"
     bl_idname = "crowdmanager.simulate"
-    bl_description = "Simulates crowd agents."
+    bl_description = "simulates crowd agents"
     bl_options = {"REGISTER", "UNDO"}
 
     node_data : bpy.props.StringProperty(name="Node", default="")
 
     def execute(self, context):
         wm = context.window_manager
-        tot = 100
         data = json.loads(self.node_data)
         node = bpy.data.node_groups[data[1]].nodes[data[0]]
 
@@ -23,7 +22,7 @@ class CM_OT_Simulate(bpy.types.Operator):
 
         f = 0
         e = context.scene.frame_end - context.scene.frame_start
-        wm.progress_begin(0, tot)
+        wm.progress_begin(0, e)
         while context.scene.frame_current <= context.scene.frame_end:
             for AGENT in agents:
                 AGENT.simulated = True
@@ -31,11 +30,6 @@ class CM_OT_Simulate(bpy.types.Operator):
                     AGENT.sim_start = context.scene.frame_start
                 else:
                     if code is not None and len(code) > 0:
-                        AGENTS = agents
-                        AGENT = AGENT
-                        FRAME = context.scene.frame_current
-                        LAST_SIM = AGENT.sim[-1]
-
                         var = {
                             "AGENTS": agents,
                             "AGENT": AGENT,
@@ -47,6 +41,7 @@ class CM_OT_Simulate(bpy.types.Operator):
                         out = var["OUTPUT"]
                         s = AGENT.sim.add()
                         s.location = out[0]
+                        s.rotation = out[1]
                     else:
                         s = AGENT.sim.add()
 
@@ -63,10 +58,10 @@ class CM_OT_Simulate(bpy.types.Operator):
         node.linked_update()
         return {'FINISHED'}
 
-class CM_OT_DeSimulate(bpy.types.Operator):
+class CrowdManager_OT_DeSimulate(bpy.types.Operator):
     bl_label = "Clear Simulated Crowds"
     bl_idname = "crowdmanager.desimulate"
-    bl_description = "Clears crowd agents simulation."
+    bl_description = "clears crowd agents simulation"
     bl_options = {"REGISTER", "UNDO"}
 
     node_data : bpy.props.StringProperty(name="Node", default="")
@@ -85,9 +80,8 @@ class CM_OT_DeSimulate(bpy.types.Operator):
             a.sim_start = context.scene.frame_start
             a.simulated = False
 
-
         node.simulated = False
         node.linked_update()
         return {'FINISHED'}
 
-simulate_classes = [CM_OT_Simulate, CM_OT_DeSimulate]
+simulate_classes = [CrowdManager_OT_Simulate, CrowdManager_OT_DeSimulate]

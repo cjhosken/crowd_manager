@@ -1,26 +1,24 @@
 import bpy
-import json
-from bpy.props import *
-from ..base_node import CM_BaseNode
+from ..base_node import CrowdManager_BaseNode
 
-class CM_MergeBehaviorNode(bpy.types.Node, CM_BaseNode):
-    bl_idname = 'CM_MergeBehaviorNode'
+class CrowdManager_MergeBehaviorNode(bpy.types.Node, CrowdManager_BaseNode):
+    bl_idname = 'CrowdManager_MergeBehaviorNode'
     bl_label = 'Merge Behavior'
     bl_width_default = 150
 
-    mix : bpy.props.FloatProperty(default=0.5, min=0, max=1, update=CM_BaseNode.property_changed)
+    mix : bpy.props.FloatProperty(name="Merge", default=0.5, description="slider value for merge", min=0, max=1, precision=3, update=CrowdManager_BaseNode.property_changed)
 
-    node_type = ["behavior"]
+    node_types = ["behavior"]
 
     def init(self, context):
         super().__init__()
-        self.inputs.new("CM_BehaviorSocketType", "Behavior")
-        self.inputs.new("CM_BehaviorSocketType", "Behavior")
-        self.outputs.new("CM_BehaviorSocketType", "Behavior")
+        self.inputs.new("CrowdManager_BehaviorSocketType", "Behavior")
+        self.inputs.new("CrowdManager_BehaviorSocketType", "Behavior")
+        self.outputs.new("CrowdManager_BehaviorSocketType", "Behavior")
 
     def draw_buttons(self, context, layout):
         row = layout.row()
-        row.prop(self, "mix", text="")
+        row.prop(self, "mix", text="Fac:", slider=True)
     
     def edit(self):
         code = ""
@@ -52,28 +50,28 @@ class CM_MergeBehaviorNode(bpy.types.Node, CM_BaseNode):
                 func_label = f"{func_name}_{func_tree}"
 
                 code = f"""
-def {func_label}_m0():
+def {func_label}_b0():
     {code0}
     return OUTPUT
 
-def {func_label}_m1():
+def {func_label}_b1():
     {code1}
     return OUTPUT
 
-OUT0 = {func_label}_m0()
-OUT1 = {func_label}_m1()
+BEHAVIOR_0 = {func_label}_b0()
+BEHAVIOR_1 = {func_label}_b1()
 MIX = {self.mix}
 
 LOCATION = [
-    OUT0[0][0] * (1 - MIX) + OUT1[0][0] * MIX,
-    OUT0[0][1] * (1 - MIX) + OUT1[0][1] * MIX,
-    OUT0[0][2] * (1 - MIX) + OUT1[0][2] * MIX
+    BEHAVIOR_0[0][0] * (1 - MIX) + BEHAVIOR_1[0][0] * MIX,
+    BEHAVIOR_0[0][1] * (1 - MIX) + BEHAVIOR_1[0][1] * MIX,
+    BEHAVIOR_0[0][2] * (1 - MIX) + BEHAVIOR_1[0][2] * MIX
 ]
 
 ROTATION = [
-    OUT0[1][0] * (1 - MIX) + OUT1[1][0] * MIX,
-    OUT0[1][1] * (1 - MIX) + OUT1[1][1] * MIX,
-    OUT0[1][2] * (1 - MIX) + OUT1[1][2] * MIX
+    BEHAVIOR_0[1][0] * (1 - MIX) + BEHAVIOR_1[1][0] * MIX,
+    BEHAVIOR_0[1][1] * (1 - MIX) + BEHAVIOR_1[1][1] * MIX,
+    BEHAVIOR_0[1][2] * (1 - MIX) + BEHAVIOR_1[1][2] * MIX
 ]
 
 OUTPUT = [LOCATION, ROTATION]    
