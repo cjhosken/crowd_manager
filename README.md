@@ -3,7 +3,6 @@ Node based visual scripting designed for creating large crowds in Blender.
 
 **This addon is currently in development**
 
-
 current issues:
-- node connecting / disconnecting updates
-- node "errors"
+- need node "error" implementation
+- custom gl drawing (round points, figure agents)
