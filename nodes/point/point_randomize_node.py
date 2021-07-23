@@ -73,13 +73,13 @@ class CrowdManager_PointRandomizeNode(bpy.types.Node, CrowdManager_BaseNode):
                     )
                 elif self.settings == "simp":
                     out_point.location = (
-                        in_point.location.x + (random.random() - 0.5) * (2 * self.simple_translate),
-                        in_point.location.y + (random.random() - 0.5) * (2 * self.simple_translate),
-                        in_point.location.z + (random.random() - 0.5) * (2 * self.simple_translate),
+                        in_point.location.x + random.uniform(-self.simple_translate, self.simple_translate),
+                        in_point.location.y + random.uniform(-self.simple_translate, self.simple_translate),
+                        in_point.location.z + random.uniform(-self.simple_translate, self.simple_translate)
                     )
 
                     out_point.rotation = (
-                        in_point.rotation.x + (random.random() - 0.5) * (2 * self.simple_rotate),
-                        in_point.rotation.y + (random.random() - 0.5) * (2 * self.simple_rotate),
-                        in_point.rotation.z + (random.random() - 0.5) * (2 * self.simple_rotate),
+                        in_point.rotation.x + random.uniform(-self.simple_rotate, self.simple_rotate),
+                        in_point.rotation.y + random.uniform(-self.simple_rotate, self.simple_rotate),
+                        in_point.rotation.z + random.uniform(-self.simple_rotate, self.simple_rotate)
                     )

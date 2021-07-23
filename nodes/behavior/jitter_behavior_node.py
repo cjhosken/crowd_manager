@@ -32,17 +32,17 @@ import bpy
 import random
 
 if {self.limit_axis[0]}:
-    X = LAST_SIM.location.x + (random.random() - 0.5) * (2*{self.strength})
+    X = LAST_SIM.location.x + random.uniform({-self.strength}, {self.strength})
 else:
     X = LAST_SIM.location.x
 
 if {self.limit_axis[1]}:
-    Y = LAST_SIM.location.y + (random.random() - 0.5) * (2*{self.strength})
+    Y = LAST_SIM.location.y + random.uniform({-self.strength}, {self.strength})
 else:
     Y = LAST_SIM.location.y
 
 if {self.limit_axis[2]}:
-    Z = LAST_SIM.location.z + (random.random() - 0.5) * (2*{self.strength})
+    Z = LAST_SIM.location.z + random.uniform({-self.strength}, {self.strength})
 else:
     Z = LAST_SIM.location.z
 
