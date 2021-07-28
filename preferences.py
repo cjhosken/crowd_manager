@@ -1,6 +1,6 @@
 import bpy
 from bpy.types import AddonPreferences
-from bpy.props import BoolProperty, FloatProperty, FloatVectorProperty
+from bpy.props import BoolProperty, FloatProperty, FloatVectorProperty, IntProperty
 
 
 class CrowdManager_Preferences(AddonPreferences):
@@ -59,6 +59,12 @@ class CrowdManager_Preferences(AddonPreferences):
         min=0, max=1
     )
 
+    point_size: IntProperty(
+        name="Point Size",
+        default=10,
+        min = 0,
+    )
+
     def draw(self, context):
         layout = self.layout
         col = layout.column()
@@ -77,6 +83,7 @@ class CrowdManager_Preferences(AddonPreferences):
         subcol.prop(self, "behavior_node_color")
         subcol.prop(self, "agent_node_color")
         subcol.prop(self, "crowd_node_color")
+        col.prop(self, "point_size")
 
         col = layout.column()
         col.operator("wm.url_open", text="Report Bug",

@@ -1,5 +1,7 @@
+from .preferences import getUserPreferences
 import bpy
 import gpu
+import math
 import bgl
 from gpu_extras.batch import batch_for_shader
 
@@ -29,7 +31,7 @@ def crowdmanager_frame_handler(scene, depsgraph):
 
 def crowdmanager_gl_draw():
     if bpy.context and bpy.context.area:
-        shader = gpu.shader.from_builtin('3D_SMOOTH_COLOR')
+        shader = gpu.shader.from_builtin("3D_SMOOTH_COLOR")
         nodes = get_viewer_nodes()
         points = [] 
         colors = []
@@ -38,34 +40,28 @@ def crowdmanager_gl_draw():
             if "point" in node.node_types:
                 if node.GL_POINTS is not None and len(node.GL_POINTS) > 0:
                     for point in node.GL_POINTS:
-                        tri = make_tri(point.location, node.GL_COLOR)
-                        points += tri[0]
-                        colors += tri[1]
+                        points.append(point.location)
+                        colors.append(node.GL_COLOR)
+            
 
             elif "agent" in node.node_types:
                 if node.GL_AGENTS is not None and len(node.GL_AGENTS) > 0:
                     for agent in node.GL_AGENTS:
                         if agent.simulated == True:
-                            tri = make_tri(agent.sim[bpy.context.scene.frame_current - agent.sim_start - 1].location, node.GL_COLOR)
-                            points += tri[0]
-                            colors += tri[1]
+                            points.append(agent.sim[bpy.context.scene.frame_current - agent.sim_start - 1].location)
+                            colors.append(node.GL_COLOR)
                         else:
-                            tri = make_tri(agent.sim[0].location, node.GL_COLOR)
-                            points += tri[0]
-                            colors += tri[1]
-
-
+                            points.append(agent.sim[0].location)
+                            colors.append(node.GL_COLOR)
+        
         batch = batch_for_shader(shader, 'POINTS', {'pos': points, 'color': colors})
+        bgl.glPointSize(getUserPreferences().point_size)
         bgl.glEnable(bgl.GL_DEPTH_TEST)
-        bgl.glPointSize(10)
-        bgl.glEnable(bgl.GL_LINE_SMOOTH)
+        bgl.glEnable(bgl.GL_POLYGON_SMOOTH)
+        bgl.glEnable(bgl.GL_BLEND)
+        
         shader.bind()
         batch.draw(shader)
-
-def make_tri(point, color):
-    points = [point]
-    colors = [color] * len(points)
-    return [points, colors]
 
 def register():
     global CROWDMANAGER_FRAME_HANDLE, CROWDMANAGER_DRAW_HANDLE
