@@ -4,7 +4,6 @@ from ..preferences import getUserPreferences
 
 
 class CrowdManager_ObjectSocket(NodeSocket):
-	'''Behavior Node Socket Type'''
 	bl_idname = 'CrowdManager_ObjectSocketType'
 	bl_label = 'Object Socket'
 

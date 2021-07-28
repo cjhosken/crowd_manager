@@ -7,6 +7,7 @@ from .point.point_randomize_node import CrowdManager_PointRandomizeNode
 from .point.point_viewer import CrowdManager_PointViewerNode
 
 from .object.object_input_node import CrowdManager_ObjectInputNode
+from .object.collection_input_node import CrowdManager_CollectionInputNode
 
 from .behavior.jitter_behavior_node import CrowdManager_JitterBehaviorNode
 from .behavior.script_behavior_node import CrowdManager_ScriptBehaviorNode, CrowdManager_OT_NodeRefresh
@@ -31,6 +32,7 @@ node_classes += [
     CrowdManager_PointViewerNode,
 
     CrowdManager_ObjectInputNode,
+    CrowdManager_CollectionInputNode,
 
     CrowdManager_OT_NodeRefresh,
     

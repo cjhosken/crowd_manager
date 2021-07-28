@@ -41,6 +41,7 @@ node_categories = [
 
     CrowdNodeCategory("OBJECT", "Object", items=[
         NodeItem("CrowdManager_ObjectInputNode"),
+        NodeItem("CrowdManager_CollectionInputNode"),
     ]),
 
     CrowdNodeCategory("BEHAVIOR", "Behavior", items=[

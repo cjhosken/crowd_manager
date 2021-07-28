@@ -3,7 +3,6 @@ from ..preferences import getUserPreferences
 
 
 class CrowdManager_BehaviorSocket(bpy.types.NodeSocket):
-	'''Behavior Node Socket Type'''
 	bl_idname = 'CrowdManager_BehaviorSocketType'
 	bl_label = 'Behavior Socket'
 

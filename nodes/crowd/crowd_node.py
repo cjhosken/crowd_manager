@@ -7,15 +7,40 @@ class CrowdManager_CrowdNode(bpy.types.Node, CrowdManager_BaseNode):
 
     node_types = ["crowd"]
 
+    settings : bpy.props.EnumProperty(
+        items=[
+            ("obj", "Object", ""),
+            ("col", "Collection", "")
+        ],
+        update=CrowdManager_BaseNode.property_changed
+    )
+
     def init(self, context):
         super().__init__()
         self.inputs.new('CrowdManager_AgentSocketType', "Agents")
         self.inputs.new('CrowdManager_ObjectSocketType', "Object")
+        self.inputs.new('CrowdManager_CollectionSocketType', "Collection")
+        self.hide_links()
+        
 
     def draw_buttons(self, context, layout):
-        pass
+        layout.prop(self, "settings", text="")
+        self.inputs[2].enabled = False
+
+    def hide_links(self):
+        if self.settings == "obj":
+            self.inputs[1].hide = False
+            self.inputs[1].enabled = True
+            self.inputs[2].hide = True
+            self.inputs[2].enabled = False
+        elif self.settings == "col":
+            self.inputs[1].hide = True
+            self.inputs[1].enabled = False
+            self.inputs[2].hide = False
+            self.inputs[2].enabled = True
     
     def edit(self):
+        self.hide_links()
         crowd_collection = getCrowdCollection()
         node0 = self.get_input_node(0)
         node1 = self.get_input_node(1)

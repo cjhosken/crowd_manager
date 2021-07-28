@@ -9,7 +9,6 @@ class CrowdManager_AgentProperty(PropertyGroup):
     sim : CollectionProperty(name="Sim", type=CrowdManager_PointProperty)
 
 class CrowdManager_AgentSocket(NodeSocket):
-	'''Agent Node Socket Type'''
 	bl_idname = 'CrowdManager_AgentSocketType'
 	bl_label = 'Agent Socket'
 

@@ -7,7 +7,6 @@ class CrowdManager_PointProperty(PropertyGroup):
 	rotation : FloatVectorProperty(name="Rotation", subtype="EULER", default=(0, 0, 0))
 
 class CrowdManager_PointSocket(NodeSocket):
-	'''Point Node Socket Type'''
 	bl_idname = 'CrowdManager_PointSocketType'
 	bl_label = 'Point Socket'
 
