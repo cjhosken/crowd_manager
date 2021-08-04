@@ -25,7 +25,6 @@ class CrowdManager_CrowdNode(bpy.types.Node, CrowdManager_BaseNode):
 
     def draw_buttons(self, context, layout):
         layout.prop(self, "settings", text="")
-        self.inputs[2].enabled = False
 
     def hide_links(self):
         if self.settings == "obj":
@@ -44,22 +43,32 @@ class CrowdManager_CrowdNode(bpy.types.Node, CrowdManager_BaseNode):
         crowd_collection = getCrowdCollection()
         node0 = self.get_input_node(0)
         node1 = self.get_input_node(1)
+        node2 = self.get_input_node(2)
 
         if len(crowd_collection.objects) > 0:
             for obj in crowd_collection.objects:
                     bpy.data.objects.remove(obj, do_unlink=True)
 
         if node0 is not None:
+            ob = []
             agents = node0.outputs[0].agents
 
-            if node1 is not None and node1.outputs[0].object is not None:
-                ob = node1.outputs[0].object
+            if self.settings == "obj":
+                if node1 is not None and node1.outputs[0].object is not None: 
+                        ob = [node1.outputs[0].object]
+            elif self.settings == "col":
+                if node2 is not None and node2.outputs[0].collection is not None:
+                    for obj in node2.outputs[0].collection.objects:
+                        ob.append(obj)
 
-                if len(agents) > 0:
+            if (self.settings == "obj" and node1 is not None) or (self.settings == "col" and node2 is not None):
+                if len(agents) > 0 and len(ob) > 0:
+                    obidx = 0
                     for idx, agent in enumerate(agents):
-                        link = bpy.data.objects.get(f"AGENT_{idx}" + "_" + ob.name)
+                        cur_ob = ob[obidx]
+                        link = bpy.data.objects.get(f"AGENT_{idx}" + "_" + cur_ob.name)
                         if link is None:
-                            link = bpy.data.objects.new(f"AGENT_{idx}" + "_" + ob.name, ob.data)
+                            link = bpy.data.objects.new(f"AGENT_{idx}" + "_" + cur_ob.name, cur_ob.data)
                         
                             addInstanceToCollection(link, crowd_collection, idx)
 
@@ -72,10 +81,17 @@ class CrowdManager_CrowdNode(bpy.types.Node, CrowdManager_BaseNode):
                         else:
                             link.location = agent.sim[0].location
                             link.rotation_euler = agent.sim[0].rotation
+                        
+                        obidx += 1
+
+                        if obidx >= len(ob):
+                            obidx = 0
             else:
                 if len(crowd_collection.objects) > 0:
                     for a in crowd_collection.objects:
-                        bpy.data.objects.remove(a, do_unlink=True)                      
+                        bpy.data.objects.remove(a, do_unlink=True)     
+
+            self.linked_update();                 
         
 def addInstanceToCollection(instance, col, idx):
     if len(col.objects) > 0:

@@ -1,5 +1,5 @@
 import bpy
-from bpy.props import BoolVectorProperty, FloatProperty
+from bpy.props import BoolVectorProperty, FloatProperty, BoolProperty
 from ..base_node import CrowdManager_BaseNode
 
 
@@ -10,6 +10,9 @@ class CrowdManager_JitterBehaviorNode(bpy.types.Node, CrowdManager_BaseNode):
 
     limit_axis: BoolVectorProperty(name="Limit Axis", description="axis jittering is constrained to", subtype="XYZ", default=(
         True, True, True), update=CrowdManager_BaseNode.property_changed)
+
+    jitter_location: BoolProperty(name="Position", description="enable positional jittering", default=True)
+    jitter_rotation: BoolProperty(name="Rotation", description="enable rotational jittering", default=True)
 
     strength: FloatProperty(name="Strength:", description="jittering strength",
                             min=0, default=1, update=CrowdManager_BaseNode.property_changed)
@@ -22,33 +25,51 @@ class CrowdManager_JitterBehaviorNode(bpy.types.Node, CrowdManager_BaseNode):
 
     def draw_buttons(self, context, layout):
         col = layout.column()
-        col.prop(self, 'strength')
         row = col.row()
-        row.prop(self, "limit_axis", text="Limit", toggle=1)
+        row.prop(self, 'jitter_location', toggle=1)
+        row.prop(self, 'jitter_rotation', toggle=1)
+        row = col.row()
+        row.prop(self, 'strength')
+        row = col.row()
+        row.prop(self, "limit_axis", text="", toggle=1)
 
     def edit(self):
         code = f"""
 import bpy
 import random
 
-if {self.limit_axis[0]}:
-    X = LAST_SIM.location.x + random.uniform({-self.strength}, {self.strength})
-else:
-    X = LAST_SIM.location.x
 
-if {self.limit_axis[1]}:
-    Y = LAST_SIM.location.y + random.uniform({-self.strength}, {self.strength})
-else:
-    Y = LAST_SIM.location.y
+PX = LAST_SIM.location.x
+PY = LAST_SIM.location.y
+PZ = LAST_SIM.location.z
 
-if {self.limit_axis[2]}:
-    Z = LAST_SIM.location.z + random.uniform({-self.strength}, {self.strength})
-else:
-    Z = LAST_SIM.location.z
+if {self.jitter_location}:    
+    if {self.limit_axis[0]}:
+        PX += random.uniform({-self.strength}, {self.strength})
 
-LOCATION = [X, Y, Z]
+    if {self.limit_axis[1]}:
+        PY += random.uniform({-self.strength}, {self.strength})
 
-ROTATION = [LAST_SIM.rotation.x, LAST_SIM.rotation.y, LAST_SIM.rotation.z]
+    if {self.limit_axis[2]}:
+        PZ += random.uniform({-self.strength}, {self.strength})
+
+RX = LAST_SIM.rotation.x
+RY = LAST_SIM.rotation.y
+RZ = LAST_SIM.rotation.z
+
+if {self.jitter_rotation}:
+    if {self.limit_axis[0]}:
+        RX += random.uniform({-self.strength}, {self.strength})
+
+    if {self.limit_axis[1]}:
+        RY += random.uniform({-self.strength}, {self.strength})
+
+    if {self.limit_axis[2]}:
+        RZ += random.uniform({-self.strength}, {self.strength})
+
+LOCATION = [PX, PY, PZ]
+
+ROTATION = [RX, RY, RZ]
 
 OUTPUT = [LOCATION, ROTATION]
         """

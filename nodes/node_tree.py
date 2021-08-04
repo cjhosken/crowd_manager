@@ -45,9 +45,11 @@ node_categories = [
     ]),
 
     CrowdNodeCategory("BEHAVIOR", "Behavior", items=[
+        NodeItem("CrowdManager_StaticBehaviorNode"),
         NodeItem("CrowdManager_JitterBehaviorNode"),
         NodeItem("CrowdManager_ScriptBehaviorNode"),
         NodeItem("CrowdManager_MergeBehaviorNode"),
+        NodeItem("CrowdManager_CombineBehaviorNode"),
         NodeItem("CrowdManager_BehaviorReaderNode"),
     ]),
 
