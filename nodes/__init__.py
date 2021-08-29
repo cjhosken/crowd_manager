@@ -10,6 +10,7 @@ from .object.object_input_node import CrowdManager_ObjectInputNode
 from .object.collection_input_node import CrowdManager_CollectionInputNode
 
 from .behavior.static_behavior_node import CrowdManager_StaticBehaviorNode
+from .behavior.constant_behavior_node import CrowdManager_ConstantBehaviorNode
 from .behavior.jitter_behavior_node import CrowdManager_JitterBehaviorNode
 from .behavior.script_behavior_node import CrowdManager_ScriptBehaviorNode, CrowdManager_OT_NodeRefresh
 from .behavior.merge_behavior_node import CrowdManager_MergeBehaviorNode
@@ -38,6 +39,7 @@ node_classes += [
 
     CrowdManager_OT_NodeRefresh,
     
+    CrowdManager_ConstantBehaviorNode,
     CrowdManager_JitterBehaviorNode,
     CrowdManager_CombineBehaviorNode,
     CrowdManager_StaticBehaviorNode,

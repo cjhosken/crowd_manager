@@ -51,6 +51,7 @@ node_categories = [
         NodeItem("CrowdManager_MergeBehaviorNode"),
         NodeItem("CrowdManager_CombineBehaviorNode"),
         NodeItem("CrowdManager_BehaviorReaderNode"),
+        NodeItem("CrowdManager_ConstantBehaviorNode")
     ]),
 
     CrowdNodeCategory("AGENT", "Agent", items=[

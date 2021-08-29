@@ -11,8 +11,8 @@ class CrowdManager_JitterBehaviorNode(bpy.types.Node, CrowdManager_BaseNode):
     limit_axis: BoolVectorProperty(name="Limit Axis", description="axis jittering is constrained to", subtype="XYZ", default=(
         True, True, True), update=CrowdManager_BaseNode.property_changed)
 
-    jitter_location: BoolProperty(name="Position", description="enable positional jittering", default=True)
-    jitter_rotation: BoolProperty(name="Rotation", description="enable rotational jittering", default=True)
+    use_location: BoolProperty(name="Position", description="enable positional jittering", default=True)
+    use_rotation: BoolProperty(name="Rotation", description="enable rotational jittering", default=True)
 
     strength: FloatProperty(name="Strength:", description="jittering strength",
                             min=0, default=1, update=CrowdManager_BaseNode.property_changed)
@@ -26,8 +26,8 @@ class CrowdManager_JitterBehaviorNode(bpy.types.Node, CrowdManager_BaseNode):
     def draw_buttons(self, context, layout):
         col = layout.column()
         row = col.row()
-        row.prop(self, 'jitter_location', toggle=1)
-        row.prop(self, 'jitter_rotation', toggle=1)
+        row.prop(self, 'use_location', toggle=1)
+        row.prop(self, 'use_rotation', toggle=1)
         row = col.row()
         row.prop(self, 'strength')
         row = col.row()
@@ -43,7 +43,7 @@ PX = LAST_SIM.location.x
 PY = LAST_SIM.location.y
 PZ = LAST_SIM.location.z
 
-if {self.jitter_location}:    
+if {self.use_location}:    
     if {self.limit_axis[0]}:
         PX += random.uniform({-self.strength}, {self.strength})
 
@@ -57,7 +57,7 @@ RX = LAST_SIM.rotation.x
 RY = LAST_SIM.rotation.y
 RZ = LAST_SIM.rotation.z
 
-if {self.jitter_rotation}:
+if {self.use_rotation}:
     if {self.limit_axis[0]}:
         RX += random.uniform({-self.strength}, {self.strength})
 

@@ -60,15 +60,15 @@ BEHAVIOR_0 = {func_label}_b0()
 BEHAVIOR_1 = {func_label}_b1()
 
 LOCATION = [
-    BEHAVIOR_0[0][0] + BEHAVIOR_1[0][0],
-    BEHAVIOR_0[0][1] + BEHAVIOR_1[0][1],
-    BEHAVIOR_0[0][2] + BEHAVIOR_1[0][2]
+    BEHAVIOR_0[0][0] + BEHAVIOR_1[0][0] - LAST_SIM.location.x,
+    BEHAVIOR_0[0][1] + BEHAVIOR_1[0][1] - LAST_SIM.location.y,
+    BEHAVIOR_0[0][2] + BEHAVIOR_1[0][2] - LAST_SIM.location.z
 ]
 
 ROTATION = [
-    BEHAVIOR_0[1][0] + BEHAVIOR_1[1][0],
-    BEHAVIOR_0[1][1] + BEHAVIOR_1[1][1],
-    BEHAVIOR_0[1][2] + BEHAVIOR_1[1][2]
+    BEHAVIOR_0[1][0] + BEHAVIOR_1[1][0] - LAST_SIM.rotation.x,
+    BEHAVIOR_0[1][1] + BEHAVIOR_1[1][1] - LAST_SIM.rotation.y,
+    BEHAVIOR_0[1][2] + BEHAVIOR_1[1][2] - LAST_SIM.rotation.z
 ]
 
 OUTPUT = [LOCATION, ROTATION]    
